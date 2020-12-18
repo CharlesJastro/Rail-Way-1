@@ -1,0 +1,6 @@
+1. Navigate to the work folder and do    git init    to initialise git. This creates a hidden .git folder. Using   dir -force   in cmd shows all including hidden folders like the .git folder.
+2. Do   git status   to see the current git status of the files in directory. Red files have not been added to git while green files have been added.
+3. Do   git add app.js   where app.js is the file name here that I want to add to the staging area. 
+4. Do   git commit -m "finished server creation"  to commit the added file to git. It's good practice to add a message in quote in present tense.
+5. Do   git log   to see what files have been committed to git.
+6. 
