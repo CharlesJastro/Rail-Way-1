@@ -1,7 +1,7 @@
 # Rail-Way
 
 # Members
-Marcin M. Malec \n
-Charles Udofia
-Dzhwar
-Al Del Degan
+Marcin M. Malec <br/>
+Charles Udofia <br/>
+Dzhwar <br/>
+Al Del Degan <br/>
