@@ -8,6 +8,9 @@
 /server/node_modules
 /server/client/node_modules
 
+/server/.package-lock
+/server/client/.package-lock
+
 # testing
 /coverage
 
