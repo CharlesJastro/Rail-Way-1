@@ -1,9 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
+/*import './App.css';*/
+import {BrowserRouter as Router} from 'react-router-dom';
+import {Routes} from './routes';
 
 function App() {
-    const [word, setWord] = React.useState('software');
+    
+    
+    return (
+        <div className="ui container">
+            <Router>
+                <Routes />
+            </Router>
+        </div>
+    );
+    
+    /*const [word, setWord] = React.useState('software');
     const [associations, setAssociations] = React.useState(null);
     const getAssociations = () => {
         fetch('/api/associations/' + word)
@@ -28,7 +40,7 @@ function App() {
                     </div>
             )}
             </div>
-    );
+    );*/
 }
 
 export default App;
