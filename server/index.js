@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const port = 3001;
 const unirest = require("unirest");
+const bodyParser = require('body-parser');
 // app.get('/api/associations/:word', (req, res) => {
 //     const request = unirest("GET", "https://twinword-word-associations-v1.p.rapidapi.com/associations/");
 //     request.query({ "entry": req.params.word });
@@ -17,6 +18,10 @@ const unirest = require("unirest");
 //         res.json(response.body.associations_scored || {});
 //     });
 // });
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 const route= [
     {
         id:1,
@@ -35,11 +40,39 @@ const route= [
         arrivalMinute:20,
         departureMinute:35
 
-    },
+    }
 ]
-app.get('/route', (req,res)=>{
+app.get('/routes', (req,res)=>{
     res.send(route)
-})
+});
+
+app.post('/routes', (req, res)=>{
+    let newRoute = {
+        id: route.length+1,
+        name: req.body.name,
+        arrivalHour: req.body.arrivalHour,
+        arrivalMinute: req.body.arrivalMinute,
+        depatureHour: req.body.depatureHour,
+        depatureMinute: req.body.depatureMinute
+    };
+    
+    route.push(newRoute);
+    
+    res.send(route);
+    
+});
+
+app.delete('/routes', (req, res) => {
+    let id = req.body.id;
+    console.log(route.findIndex((obj)=> obj.id === id));
+    let i = route.findIndex((obj)=> obj.id === id);
+    if (i !== -1) {
+        route.splice(i, 1);
+        res.send(route);
+    } else {
+        res.send('Id not found');
+    }
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
