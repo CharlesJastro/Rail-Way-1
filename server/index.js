@@ -52,8 +52,8 @@ app.post('/routes', (req, res)=>{
         name: req.body.name,
         arrivalHour: req.body.arrivalHour,
         arrivalMinute: req.body.arrivalMinute,
-        depatureHour: req.body.depatureHour,
-        depatureMinute: req.body.depatureMinute
+        departureHour: req.body.departureHour,
+        departureMinute: req.body.departureMinute
     };
     
     route.push(newRoute);

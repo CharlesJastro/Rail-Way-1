@@ -1,13 +1,45 @@
-import React from 'react';
+import React, {Component} from 'react';
+import {render} from 'react-dom';
+import axios from 'axios';
 
-const RoutesList = function (props) {
-    return (
-        <div className="ui container" >
-            <h2>Routes List</h2>   
-            <h3>{props.headingTrain} {props.headingDepart} {props.headingArrive} {props.headingFare}</h3>
-            <div>{props.route} {props.departure} {props.arrival} {props.fare}</div>
-        </div>
-    );
+class RoutesList extends Component {
+    constructor() {
+        super();
+        this.state = {
+            routes: []
+        }
+        this.getRoutes = this.getRoutes.bind(this);
+    }
+    
+    componentDidMount() {
+        this.getRoutes();
+    }
+    
+    async getRoutes() {
+        let data = await axios
+            .get('/routes')
+            .then(function(response) {
+                return response;
+            }).catch(function(error) {
+                console.log(error);
+            });
+        this.setState({routes: data.data}, () => {
+            console.log(this.state.routes);
+        });
+    }
+    
+    render() {
+        return (
+            <div className="ui container">
+                <h2>Routes List</h2>
+                <ul>
+                    {this.state.routes.map((route, index) => (
+                        <li>{route.name} {route.departureHour}:{route.departureMinute} {route.arrivalHour}:{route.arrivalMinute}</li>
+                    ))}
+                </ul>
+            </div>
+        );
+    }
 };
 
 export default RoutesList;
