@@ -3,6 +3,7 @@ const app = express();
 const port = 3001;
 const unirest = require("unirest");
 const bodyParser = require('body-parser');
+const {DateTime} = require('luxon');
 // app.get('/api/associations/:word', (req, res) => {
 //     const request = unirest("GET", "https://twinword-word-associations-v1.p.rapidapi.com/associations/");
 //     request.query({ "entry": req.params.word });
@@ -22,24 +23,24 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+//let dt=DateTime.fromObject({hour: 12, minute: 37})
+
+//console.log(dt);
+
 const route= [
     {
         id:1,
         name:'Kd to Abj',
-        arrivalHour: 8,
-        departureHour:6,
-        arrivalMinute: 43,
-        departureMinute:40
-        
+        departure: (DateTime.fromObject({hour: 6, minute: 40})).toLocaleString(DateTime.TIME_SIMPLE),
+        arrival: (DateTime.fromObject({hour: 8, minute: 43})).toLocaleString(DateTime.TIME_SIMPLE),
+        fare: 50
     },
     {
         id:2,
         name:'Abj to Kd',
-        arrivalHour:13 ,
-        departureHour:10,
-        arrivalMinute:20,
-        departureMinute:35
-
+        departure: (DateTime.fromObject({hour: 10, minute: 35})).toLocaleString(DateTime.TIME_SIMPLE),
+        arrival: (DateTime.fromObject({hour: 13, minute: 20})).toLocaleString(DateTime.TIME_SIMPLE),
+        fare: 20
     }
 ]
 app.get('/routes', (req,res)=>{
@@ -50,10 +51,9 @@ app.post('/routes', (req, res)=>{
     let newRoute = {
         id: route.length+1,
         name: req.body.name,
-        arrivalHour: req.body.arrivalHour,
-        arrivalMinute: req.body.arrivalMinute,
-        departureHour: req.body.departureHour,
-        departureMinute: req.body.departureMinute
+        departure: (DateTime.fromObject({hour: req.body.departureHour, minute: req.body.departureMinute})).toLocaleString(DateTime.TIME_SIMPLE),
+        arrival: (DateTime.fromObject({hour: req.body.arrivalHour, minute: req.body.arrivalMinute})).toLocaleString(DateTime.TIME_SIMPLE),
+        fare: req.body.fare
     };
     
     route.push(newRoute);

@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 import axios from 'axios';
+import {ListItem} from '../../components/ListItem';
+import './RoutesList.css';
+import {DateTime} from 'luxon';
 
 class RoutesList extends Component {
     constructor() {
@@ -23,20 +26,27 @@ class RoutesList extends Component {
             }).catch(function(error) {
                 console.log(error);
             });
-        this.setState({routes: data.data}, () => {
-            console.log(this.state.routes);
-        });
+        this.setState({routes: data.data});
     }
     
     render() {
         return (
-            <div className="ui container">
+            <div className="ui container routesList">
                 <h2>Routes List</h2>
-                <ul>
+                <table style={{width:"100%"}}>
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Departure Time</th>
+                            <th>Arrival Time</th>
+                            <th>Fare</th>
+                        </tr>
+                    </thead>
                     {this.state.routes.map((route, index) => (
-                        <li>{route.name} {route.departureHour}:{route.departureMinute} {route.arrivalHour}:{route.arrivalMinute}</li>
+                        <ListItem key={route.id} data={route}/>
+                        //<li key={route.id}>{route.name} {route.departureHour}:{route.departureMinute} {route.arrivalHour}:{route.arrivalMinute}</li>
                     ))}
-                </ul>
+                </table>
             </div>
         );
     }
