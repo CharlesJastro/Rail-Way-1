@@ -1,9 +1,19 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const port = 3001;
 const unirest = require("unirest");
 const bodyParser = require('body-parser');
+const mongoose=require('mongoose')
 const {DateTime} = require('luxon');
+const morgan = require('morgan');
+const Route= require('./models/route')
+
+//DATABASE CONNECTION
+const dbURI=process.env.DATABASE_URL;
+mongoose.connect(dbURI,{useUnifiedTopology:true, useNewUrlParser:true})
+.then((result)=>console.log('Connected to DB'))
+.catch((err)=>console.log(err))
 // app.get('/api/associations/:word', (req, res) => {
 //     const request = unirest("GET", "https://twinword-word-associations-v1.p.rapidapi.com/associations/");
 //     request.query({ "entry": req.params.word });
@@ -22,11 +32,13 @@ const {DateTime} = require('luxon');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.urlencoded({extended:true}))
+app.use(morgan('dev'));
 
 //let dt=DateTime.fromObject({hour: 12, minute: 37})
 
 //console.log(dt);
-
+/*
 const route= [
     {
         id:1,
@@ -43,9 +55,66 @@ const route= [
         fare: 20
     }
 ]
-app.get('/routes', (req,res)=>{
-    res.send(route)
-});
+*/
+// app.get('/routes',(req,res)=>{
+//     const route= new Route({
+//         id:1,
+//         name:'Calgary to Edmonton',
+//         departureHour:10,
+//         departureMinute:35,
+//         arrivalHour:13,
+//         arrivalMinute:20,
+//         fare:23
+//     });
+//     route.save()
+//     .then((result)=>{
+//         res.send(result)
+//     })
+//     .catch((err)=>{
+//         console.log(err)
+//     })
+// })
+//GET
+app.get('/routes',(req,res)=>{
+    Route.find().then((result)=>{
+        res.send(result);
+    })
+    .catch((err)=>{
+        console.log(err)
+    });
+})
+//POST
+
+// app.post('/routes',(req,res)=>{
+//     const route= new Route(req.body);
+//     route.save()
+//     .then((result)=>{
+//         res.send('Routes save to database')
+//     }).catch((err)=>{
+//         console.log(err);
+//     })
+// })
+// app.get('/routes/:id',(req,res)=>{
+//     const id = req.params.id;
+//     Route.findById(id)
+//     .then(result=>{
+//         res.send('routes detail')
+//     })
+//     .catch(err=>{
+//         console.log(err)
+//     })
+// })
+//DELETE
+// app.delete('routes/:id',(req,res)=>{
+//     const id= req.params.id;
+//     Route.findByIdAndDelete(id)
+//     .then(result=>{
+//         res.json({ redirect: '/routes'})
+//     })
+//     .catch(err=>{
+//         console.log(err)
+//     })
+// })
 
 app.post('/routes', (req, res)=>{
     let newRoute = {
@@ -73,6 +142,7 @@ app.delete('/routes', (req, res) => {
         res.send('Id not found');
     }
 });
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
