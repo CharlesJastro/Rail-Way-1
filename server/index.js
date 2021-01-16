@@ -7,7 +7,6 @@ const bodyParser = require('body-parser');
 const mongoose=require('mongoose')
 const {DateTime} = require('luxon');
 const morgan = require('morgan');
-const Route= require('./models/route')
 
 //DATABASE CONNECTION
 const dbURI=process.env.DATABASE_URL;
@@ -32,9 +31,12 @@ mongoose.connect(dbURI,{useUnifiedTopology:true, useNewUrlParser:true})
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'));
-
+//ROUTER  
+const routeRouter=require('./routes/route.js')
+app.use('/routes',routeRouter)
 //let dt=DateTime.fromObject({hour: 12, minute: 37})
 
 //console.log(dt);
@@ -56,92 +58,34 @@ const route= [
     }
 ]
 */
-// app.get('/routes',(req,res)=>{
-//     const route= new Route({
-//         id:1,
-//         name:'Calgary to Edmonton',
-//         departureHour:10,
-//         departureMinute:35,
-//         arrivalHour:13,
-//         arrivalMinute:20,
-//         fare:23
-//     });
-//     route.save()
-//     .then((result)=>{
-//         res.send(result)
-//     })
-//     .catch((err)=>{
-//         console.log(err)
-//     })
-// })
-//GET
-app.get('/routes',(req,res)=>{
-    Route.find().then((result)=>{
-        res.send(result);
-    })
-    .catch((err)=>{
-        console.log(err)
-    });
-})
-//POST
 
-// app.post('/routes',(req,res)=>{
-//     const route= new Route(req.body);
-//     route.save()
-//     .then((result)=>{
-//         res.send('Routes save to database')
-//     }).catch((err)=>{
-//         console.log(err);
-//     })
-// })
-// app.get('/routes/:id',(req,res)=>{
-//     const id = req.params.id;
-//     Route.findById(id)
-//     .then(result=>{
-//         res.send('routes detail')
-//     })
-//     .catch(err=>{
-//         console.log(err)
-//     })
-// })
-//DELETE
-// app.delete('routes/:id',(req,res)=>{
-//     const id= req.params.id;
-//     Route.findByIdAndDelete(id)
-//     .then(result=>{
-//         res.json({ redirect: '/routes'})
-//     })
-//     .catch(err=>{
-//         console.log(err)
-//     })
-// })
 
-app.post('/routes', (req, res)=>{
-    let newRoute = {
-        id: route.length+1,
-        name: req.body.name,
-        departure: (DateTime.fromObject({hour: req.body.departureHour, minute: req.body.departureMinute})).toLocaleString(DateTime.TIME_SIMPLE),
-        arrival: (DateTime.fromObject({hour: req.body.arrivalHour, minute: req.body.arrivalMinute})).toLocaleString(DateTime.TIME_SIMPLE),
-        fare: req.body.fare
-    };
+// app.post('/routes', (req, res)=>{
+//     let newRoute = {
+//         id: route.length+1,
+//         name: req.body.name,
+//         departure: (DateTime.fromObject({hour: req.body.departureHour, minute: req.body.departureMinute})).toLocaleString(DateTime.TIME_SIMPLE),
+//         arrival: (DateTime.fromObject({hour: req.body.arrivalHour, minute: req.body.arrivalMinute})).toLocaleString(DateTime.TIME_SIMPLE),
+//         fare: req.body.fare
+//     };
     
-    route.push(newRoute);
+//     route.push(newRoute);
     
-    res.send(route);
+//     res.send(route);
     
-});
+// });
 
-app.delete('/routes', (req, res) => {
-    let id = req.body.id;
-    console.log(route.findIndex((obj)=> obj.id === id));
-    let i = route.findIndex((obj)=> obj.id === id);
-    if (i !== -1) {
-        route.splice(i, 1);
-        res.send(route);
-    } else {
-        res.send('Id not found');
-    }
-});
+// app.delete('/routes', (req, res) => {
+//     let id = req.body.id;
+//     console.log(route.findIndex((obj)=> obj.id === id));
+//     let i = route.findIndex((obj)=> obj.id === id);
+//     if (i !== -1) {
+//         route.splice(i, 1);
+//         res.send(route);
+//     } else {
+//         res.send('Id not found');
+//     }
+// });
 
 
 app.listen(port, () => {
