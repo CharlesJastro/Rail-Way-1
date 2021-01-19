@@ -2,6 +2,12 @@ const { Router } = require('express');
 const express=require('express');
 const router=express.Router()
 const Route= require('../models/route')
+const {DateTime} = require('luxon');
+// const ExceptionRoutes = require('.../models/exceptionRoute);
+
+const TIMEZONE = 'UTC-7';
+//console.log((DateTime.local().setZone(TIMEZONE)).isValid);
+
 //GET-ALL
 router.get('/', async(req,res)=>{
     try{
@@ -15,6 +21,10 @@ router.get('/', async(req,res)=>{
 router.get('/:id', getRoute,(req,res)=>{
     res.json(res.route)
 })
+// GET BY DAY
+router.get('/day/:day', getRoutes, (req,res)=>{
+    res.json(res.route);
+});
 //CREATE
 router.post('/', async(req,res)=>{
     const route= new Route({
@@ -82,6 +92,33 @@ async function getRoute(req,res,next){
     }
     res.route=route
     next()
+}
+
+async function getExceptions(req, res, next) {
+    try {
+        let exception = await ExceptionRoutes.find(req.params.day);
+    } catch(err) {
+        return res.status(500).json({message: err.message});
+    }
+    res.route=exception;
+    next();
+}
+// This function get a list of routes based on numerical day
+async function getRoutes(req, res, next) {
+    let routes;
+    try {
+        // Get routes based on numerical day
+        routes = await Route.find({day: req.params.day});
+    } catch(err) {
+        return res.status(500).json({message: err.message});
+    }
+    // Get current server time
+    let time = DateTime.local().setZone(TIMEZONE);
+    // Perform all the filtering, sorting, and mapping to pass the relavent information
+    routes = routes.filter(route => (
+        DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}) > DateTime.local().setZone(TIMEZONE))).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).filter((route, index, self) => index === self.findIndex((t) => (t.name === route.name))).map((route) => ({_id: route._id, name: route.name, day: route.day, departure: DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}), arrival: DateTime.fromObject({zone: TIMEZONE, hour: route.arrivalHour, minute: route.arrivalMinute}), fare: route.fare}));
+    res.route=routes;
+    next();
 }
 
 module.exports=router

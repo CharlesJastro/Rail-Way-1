@@ -8,11 +8,11 @@ const routeSchema=new Schema({
         type:String,
         required:true
     },
-    day:{
-        type:String,
-        required:true
+    day: {
+        type: Number,
+        required: true
     },
-      departureHour:{
+    departureHour:{
         type:Number,
         required:true,
         default:Date.now

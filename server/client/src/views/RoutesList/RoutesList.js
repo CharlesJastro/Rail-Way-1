@@ -18,7 +18,6 @@ class RoutesList extends Component {
     componentDidMount() {
         this.getRoutes();
         this.setState({time: new Date()});
-        console.log(this.state.time.getHour);
     }
     
     async getRoutes() {
@@ -37,6 +36,9 @@ class RoutesList extends Component {
         return (
             <div className="ui container routesList">
                 <h2>Routes List</h2>
+                <h4>Schedule Timezone: America/Edmonton</h4>
+                <h4>Your Timezone: {DateTime.local().zoneName}</h4>
+                {console.log(DateTime.local().weekday)}
                 <table style={{width:"100%"}}>
                     <thead>
                         <tr>
@@ -47,10 +49,9 @@ class RoutesList extends Component {
                         </tr>
                     </thead>
                     <tbody>
-                        {this.state.routes.filter(route => DateTime.fromObject({hour: route.departureHour, minute: route.departureMinute}) > DateTime.fromObject({hour: this.state.time.getHours(), minute: this.state.time.getMinutes()})).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).filter((route, index, self) => index === self.findIndex((t) => (t.name === route.name))).map((route, index) => (
-                        <ListItem key={route._id} id={route._id} data={[route.name, (DateTime.fromObject({hour: route.departureHour, minute: route.departureMinute}).toLocaleString(DateTime.TIME_SIMPLE)), (DateTime.fromObject({hour: route.arrivalHour, minute: route.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)), route.fare]}/>
-                        //<li key={route.id}>{route.name} {route.departureHour}:{route.departureMinute} {route.arrivalHour}:{route.arrivalMinute}</li>
-                    ))}
+                        {this.state.routes.map((route, index) => (
+                            console.log('This needs to be implemented')
+                        ))}
                     </tbody>
                 </table>
             </div>
@@ -60,11 +61,4 @@ class RoutesList extends Component {
 
 export default RoutesList;
 
-
-/*{this.state.routes.map((route, index) => (
-                        <ListItem key={route._id} data={route}/>
-                        //<li key={route.id}>{route.name} {route.departureHour}:{route.departureMinute} {route.arrivalHour}:{route.arrivalMinute}</li>
-                    ))}*/
-
-
-//    <div style={{ display: "flex", flexDirection: "column", alignContent: "center",  backgroundColor:"orange"}}>
+/* <ListItem key={route._id} id={route._id} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare]}/> */
