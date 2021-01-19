@@ -22,8 +22,9 @@ class RoutesList extends Component {
     }
     
     async getRoutes() {
+        let currentDay = new Date().getDay();
         let data = await axios
-            .get('/routes/day/1')
+            .get(`/routes/day/${currentDay}`)
             .then(function(response) {
                 return response;
             }).catch(function(error) {
