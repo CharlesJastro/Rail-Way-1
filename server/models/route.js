@@ -8,6 +8,10 @@ const routeSchema=new Schema({
         type:String,
         required:true
     },
+    day:{
+        type:String,
+        required:true
+    },
       departureHour:{
         type:Number,
         required:true,
@@ -28,7 +32,8 @@ const routeSchema=new Schema({
     fare:{
         type:Number,
         required:true
-    }
+    },
+
 },{timestamps:true});
 
 const Route= mongoose.model('Route', routeSchema)

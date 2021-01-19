@@ -19,6 +19,7 @@ router.get('/:id', getRoute,(req,res)=>{
 router.post('/', async(req,res)=>{
     const route= new Route({
         name:req.body.name,
+        day: req.body.day,
         departureHour:req.body.departureHour,
         departureMinute:req.body.departureMinute,
         arrivalHour:req.body.arrivalHour,
@@ -39,6 +40,9 @@ router.patch('/:id', getRoute, async(req,res)=>{
     }
     if(req.body.departureHour !=null){
         res.route.departureHour=req.body.departureHour
+    }
+    if(req.body.day!=null){
+        res.route.day=req.body.day
     }
     if(req.body.departureMinute !=null){
         res.route.departureMinute=req.body.departureMinute
