@@ -4,6 +4,7 @@ import axios from 'axios';
 import {DateTime} from 'luxon';
 import {ListItem} from '../../components/ListItem';
 import './RoutesList.css';
+import { ListSubItem } from '../../components/ListSubItem';
 
 class RoutesList extends Component {
     constructor() {
@@ -22,7 +23,7 @@ class RoutesList extends Component {
     
     async getRoutes() {
         let data = await axios
-            .get('/routes')
+            .get('/routes/day/1')
             .then(function(response) {
                 return response;
             }).catch(function(error) {
@@ -50,7 +51,7 @@ class RoutesList extends Component {
                     </thead>
                     <tbody>
                         {this.state.routes.map((route, index) => (
-                            console.log('This needs to be implemented')
+                         <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare]}/>
                         ))}
                     </tbody>
                 </table>
