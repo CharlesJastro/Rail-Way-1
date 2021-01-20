@@ -4,6 +4,7 @@ import {NavBar} from './components/NavBar';
 import {RoutesList} from './views/RoutesList';
 import {Travel} from './views/Travel';
 import {Favourites} from './views/Favourites';
+import {RouteDetails} from './components/RouteDetails';
 import { Route, Switch, Redirect } from 'react-router-dom';
 
 export const Routes = () => {
@@ -17,6 +18,7 @@ export const Routes = () => {
             </Route>
             <Route exact path="/travel" component={Travel} />
             <Route exact path="/favourites" component={Favourites} />
+            <Route path="/route/:name" component={RouteDetails}/>
         </Switch>
         <NavBar />
     </div>
