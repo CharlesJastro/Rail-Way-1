@@ -1,6 +1,6 @@
 import React from 'react';
-import {ListSubItem} from '../ListSubItem';
-//import {DateTime} from 'luxon';
+ import {ListSubItem} from '../ListSubItem';
+ import {DateTime} from 'luxon';
 
 const ListItem = ({id, data}) => {
     return (
@@ -11,6 +11,28 @@ const ListItem = ({id, data}) => {
         </tr>
   );
 }
+
+/*
+function ListItem(props){
+    const Items=[
+        {}
+    ];
+    return(
+        <ul>
+            {Items.map((data)=>(
+                <li key={data.id}>
+                    <p>{data.name}</p>
+                    <p>{data.departure}</p>
+                    <p>{data.arrival}</p>
+                    <p>{data.fare}</p>
+                    <p>{data.day}</p>
+                </li>
+            ))}
+        </ul>
+    )
+}
+*/
+
 
 export default ListItem;
 

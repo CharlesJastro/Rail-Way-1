@@ -1,10 +1,14 @@
 import React from 'react';
 
 const ListSubItem = ({data}) => {
+  function handleClick(){
+    console.log(data);
+  }
   return (
-      <td>
-          {data}
-      </td>
+  
+      <td onClick={handleClick}>{data}</td>
+
+      
   );
 }
 
