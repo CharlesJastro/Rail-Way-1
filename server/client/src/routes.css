@@ -1,0 +1,11 @@
+.notice-info {
+    background-color: skyblue;
+    color: white;
+    border: 2px solid black;
+}
+
+.notice-alert {
+    background-color: red;
+    color: white;
+    border: 2px solid black;
+}

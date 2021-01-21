@@ -10,3 +10,8 @@ td {
 .routesList {
     padding-bottom: 14px;
 }
+
+.routeRow:hover {
+    background-color: hotpink;
+    cursor: pointer;
+}

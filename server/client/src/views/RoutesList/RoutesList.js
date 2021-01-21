@@ -11,14 +11,15 @@ class RoutesList extends Component {
         super();
         this.state = {
             routes: [],
-            time: 0
+            connection: false
         }
         this.getRoutes = this.getRoutes.bind(this);
+        this.connectionError = this.connectionError.bind(this);
     }
     
     componentDidMount() {
+        this.setState({connection: true});
         this.getRoutes();
-        this.setState({time: new Date()});
     }
     
     async getRoutes() {
@@ -30,34 +31,53 @@ class RoutesList extends Component {
             }).catch(function(error) {
                 console.log(error);
             });
-        this.setState({routes: data.data});
-        console.log(this.state.routes);
+        try {
+            this.setState({routes: data.data});
+            console.log(this.state.routes);
+        } catch(error) {
+            console.log(error);
+            this.setState({connection: false});
+        } 
+    }
+    
+    connectionError() {
+        console.log('error');
     }
     
     render() {
-        return (
-            <div className="ui container routesList">
-                <h2>Routes List</h2>
-                <h4>Schedule Timezone: America/Edmonton</h4>
-                <h4>Your Timezone: {DateTime.local().zoneName}</h4>
-                {console.log(DateTime.local().weekday)}
-                <table style={{width:"100%"}}>
-                    <thead>
-                        <tr>
-                            <th>Route</th>
-                            <th>Departure Time</th>
-                            <th>Arrival Time</th>
-                            <th>Fare</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.routes.map((route, index) => (
-                         <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare]}/>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        );
+        if (!this.state.connection) {
+            console.log('Error');
+            return (
+                <div className="ui container routesList">
+                    <h2>Routes List Currently Unavailable</h2>
+                    <p>Please try again later. We apologize for the inconvenience.</p>
+                </div>
+            );
+        } else {
+            return (
+                <div className="ui container routesList">
+                    <h2>Routes List</h2>
+                    <h4>Schedule Timezone: America/Edmonton</h4>
+                    <h4>Your Timezone: {DateTime.local().zoneName}</h4>
+                    {console.log(DateTime.local().weekday)}
+                    <table style={{width:"100%"}}>
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th>Departure Time</th>
+                                <th>Arrival Time</th>
+                                <th>Fare</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.routes.map((route, index) => (
+                             <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare]}/>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        }  
     }
 };
 

@@ -1,10 +1,10 @@
 import React from 'react';
- import {ListSubItem} from '../ListSubItem';
- import {DateTime} from 'luxon';
+import {ListSubItem} from '../ListSubItem';
+import {DateTime} from 'luxon';
 
 const ListItem = ({id, data}) => {
     return (
-        <tr id={id}>
+        <tr id={id} className="routeRow" onClick={()=>window.location.href = "/route/" + data[0]}>
             {data.map((x, index)=> (
                 <ListSubItem key={index} data={x} />
             ))}
