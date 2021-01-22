@@ -1,5 +1,6 @@
 import React from 'react';
 
+// JS class rendering the Favourite page of the navbar
 const Favourites = props => {
   return (
     <div>

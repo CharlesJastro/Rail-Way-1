@@ -1,6 +1,7 @@
 import React from 'react';
 import './Header.css';
 
+// Javascript class rendering logo image
 class Header extends React.Component {
     render() {
         return (

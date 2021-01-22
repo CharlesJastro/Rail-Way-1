@@ -1,3 +1,4 @@
+// Schema for handling/receiving data into our mongo database
 const mongoose = require('mongoose');
 
 const Schema= mongoose.Schema;

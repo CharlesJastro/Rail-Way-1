@@ -1,3 +1,4 @@
+// Server.  require express 
 require('dotenv').config()
 const express = require('express');
 const app = express();
@@ -29,6 +30,7 @@ mongoose.connect(dbURI,{useUnifiedTopology:true, useNewUrlParser:true})
 //     });
 // });
 
+// Middleware app.use
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json())

@@ -1,6 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 
+// JS Class rendering route information for each train line
 class RouteDetails extends React.Component {
     componentDidMount() {
           

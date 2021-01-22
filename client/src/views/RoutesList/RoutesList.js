@@ -6,6 +6,7 @@ import {ListItem} from '../../components/ListItem';
 import './RoutesList.css';
 import { ListSubItem } from '../../components/ListSubItem';
 
+// JS class rendering the Route page of the navbar
 class RoutesList extends Component {
     constructor() {
         super();
@@ -22,6 +23,7 @@ class RoutesList extends Component {
         this.getRoutes();
     }
     
+    // function returning route information for each day
     async getRoutes() {
         let currentDay = new Date().getDay();
         let data = await axios
@@ -44,6 +46,7 @@ class RoutesList extends Component {
         console.log('error');
     }
     
+    // JSX rendering Route List information on Route page of the navbar
     render() {
         if (!this.state.connection) {
             console.log('Error');
