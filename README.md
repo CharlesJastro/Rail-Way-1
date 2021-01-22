@@ -1,8 +1,10 @@
 # Rail-Way
 
 # Members
-Marcin M. Malec <br/>
 Charles Udofia <br/>
 Dzhwar <br/>
+Marcin M. Malec <br/>
+Puya <br/>
 
+# Supervisor
 Al Del Degan <br/>

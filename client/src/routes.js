@@ -5,6 +5,7 @@ import {RoutesList} from './views/RoutesList';
 import {Travel} from './views/Travel';
 import {Favourites} from './views/Favourites';
 import {RouteDetails} from './components/RouteDetails';
+import NotificationField from './components/NotificationField';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import './routes.css';
 
@@ -17,7 +18,7 @@ const notifications = [
     {
         title: 'Test Alert Notification',
         urgency: 'alert',
-        message: 'Just a test'
+        message: 'Random words'
     }
 ]
 
@@ -25,12 +26,7 @@ export const Routes = () => {
   return (
     <div className="ui segment">
         <Header />
-        {notifications.map((notice) => (
-            <div className={'notice-'+notice.urgency}>
-                <h3>{notice.title}</h3>
-                <p>{notice.message}</p>
-            </div>  
-        ))}
+        <NotificationField notifications={notifications}/>
         <Switch>
             <Route exact path="/" component={RoutesList} />
             <Route exact path="/">

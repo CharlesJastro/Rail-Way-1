@@ -12,14 +12,13 @@ class RoutesList extends Component {
         super();
         this.state = {
             routes: [],
-            connection: false
+            connection: 0
         }
         this.getRoutes = this.getRoutes.bind(this);
         this.connectionError = this.connectionError.bind(this);
     }
     
     componentDidMount() {
-        this.setState({connection: true});
         this.getRoutes();
     }
     
@@ -35,10 +34,14 @@ class RoutesList extends Component {
             });
         try {
             this.setState({routes: data.data});
-            console.log(this.state.routes);
+            if (this.state.routes.length > 0) {
+                this.setState({connection: 1});
+            } else {
+                this.setState({connection: 2});
+            }
         } catch(error) {
             console.log(error);
-            this.setState({connection: false});
+            this.setState({connection: -1});
         } 
     }
     
@@ -48,7 +51,7 @@ class RoutesList extends Component {
     
     // JSX rendering Route List information on Route page of the navbar
     render() {
-        if (!this.state.connection) {
+        if (this.state.connection === -1) {
             console.log('Error');
             return (
                 <div className="ui container routesList">
@@ -56,7 +59,7 @@ class RoutesList extends Component {
                     <p>Please try again later. We apologize for the inconvenience.</p>
                 </div>
             );
-        } else {
+        } else if (this.state.connection === 1) {
             return (
                 <div className="ui container routesList">
                     <h2>Routes List</h2>
@@ -78,6 +81,20 @@ class RoutesList extends Component {
                             ))}
                         </tbody>
                     </table>
+                </div>
+            );
+        } else if (this.state.connection === 2) {
+            return (
+                <div className="ui container routesList">
+                    <h2>Routes List</h2>
+                    <p>There are no more trains operating today</p>
+                </div>
+            );
+        } else {
+            return (
+                <div className="ui container routesList">
+                    <h2>Routes List</h2>
+                    <p>Loading...</p>
                 </div>
             );
         }  
