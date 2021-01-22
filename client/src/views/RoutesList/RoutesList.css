@@ -12,6 +12,6 @@ td {
 }
 
 .routeRow:hover {
-    background-color: hotpink;
+    background-color: rgb(86, 212, 153);
     cursor: pointer;
 }
