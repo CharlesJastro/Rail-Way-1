@@ -1,0 +1,107 @@
+body {
+    font: 15px/1.5 Arial, Helvetica, sans-serif;
+    padding: 0;
+    margin: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #203a4b;
+    color: #ffffff;
+    padding-top: 20px;
+    min-height: 50px;
+}
+
+header a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+header li {
+    float: left;
+    display: inline;
+    padding: 0 20px 0 20px;
+}
+
+header #branding {
+    float: left;
+}
+
+header nav {
+    float: right;
+    margin-top: 10px;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 80%;
+    margin: auto;
+    overflow: hidden;
+}
+
+.section {
+    min-height: 100vh;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.EnterSchedule {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+.class5 {
+    width: 5%;
+}
+
+.class10 {
+    width: 10%;
+}
+
+.class20 {
+    width: 20%;
+}
+
+.class30 {
+    width: 30%;
+}
+
+.class40 {
+    width: 40%;
+}
+
+.class50 {
+    width: 50%;
+}
+
+.class60 {
+    width: 50%;
+}
+
+.class80 {
+    width: 50%;
+}
+
+.pullLeft {
+    float: "left";
+}
+
+.pullRight {
+    float: "right";
+}
+
+.smallText {
+    font-size: 10px;
+}
+
+.buttonClass {
+    padding: 10px 20px;
+}
