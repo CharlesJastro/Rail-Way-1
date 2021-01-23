@@ -38,6 +38,7 @@ app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'));
 //ROUTER  
 const routeRouter=require('./routes/route.js')
+
 app.use('/routes',routeRouter)
 //let dt=DateTime.fromObject({hour: 12, minute: 37})
 

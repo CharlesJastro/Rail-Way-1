@@ -1,5 +1,5 @@
 // API controller (app.get, app.post)
-const { Router } = require('express');
+const { Router, response } = require('express');
 const express=require('express');
 const router=express.Router()
 const Route= require('../models/route')
@@ -18,6 +18,8 @@ router.get('/', async(req,res)=>{
         res.status(500).json({message:err.message})
     }
 })
+
+
 //GET-ONE
 router.get('/:id', getRoute,(req,res)=>{
     res.json(res.route)
@@ -26,10 +28,15 @@ router.get('/:id', getRoute,(req,res)=>{
 router.get('/day/:day', getRoutes, (req,res)=>{
     res.json(res.route);
 });
+//GET BY STATION
+router.get('/station/:id',getRoute,(req,res)=>{
+    res.json(res.route)
+})
 //CREATE
 router.post('/', async(req,res)=>{
     const route= new Route({
         name:req.body.name,
+        station:req.body.station,
         day: req.body.day,
         departureHour:req.body.departureHour,
         departureMinute:req.body.departureMinute,
@@ -48,6 +55,9 @@ router.post('/', async(req,res)=>{
 router.patch('/:id', getRoute, async(req,res)=>{
     if(req.body.name !==null){
         res.route.name=req.body.name
+    }
+    if(req.body.station !==null){
+        res.route.station=req.body.station
     }
     if(req.body.departureHour !=null){
         res.route.departureHour=req.body.departureHour
@@ -80,7 +90,7 @@ router.delete('/:id',getRoute, async(req,res)=>{
         res.status(500).json({message:err.message})
     }
 })
-//MIDDLEWARE ROUTE
+
 async function getRoute(req,res,next){
     let route
     try{
