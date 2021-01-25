@@ -38,8 +38,11 @@ app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'));
 //ROUTER  
 const routeRouter=require('./routes/route.js')
-
+// Create router for notification requests
+const notifRouter = require('./routes/notifications.js');
 app.use('/routes',routeRouter)
+// Use notification router
+app.use('/notifications', notifRouter);
 //let dt=DateTime.fromObject({hour: 12, minute: 37})
 
 //console.log(dt);

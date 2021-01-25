@@ -9,24 +9,11 @@ import NotificationField from './components/NotificationField';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import './routes.css';
 
-const notifications = [
-    {
-        title: 'Test Info Notification',
-        urgency: 'info',
-        message: 'Just a test'
-    },
-    {
-        title: 'Test Alert Notification',
-        urgency: 'alert',
-        message: 'Random words'
-    }
-]
-
 export const Routes = () => {
   return (
     <div className="ui segment">
         <Header />
-        <NotificationField notifications={notifications}/>
+        <NotificationField />
         <Switch>
             <Route exact path="/" component={RoutesList} />
             <Route exact path="/">
