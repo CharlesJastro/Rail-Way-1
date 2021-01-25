@@ -36,7 +36,7 @@ router.get('/station/:id',getRoute,(req,res)=>{
 router.post('/', async(req,res)=>{
     const route= new Route({
         name:req.body.name,
-        station:req.body.station,
+        
         day: req.body.day,
         departureHour:req.body.departureHour,
         departureMinute:req.body.departureMinute,

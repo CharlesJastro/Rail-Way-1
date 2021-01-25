@@ -9,10 +9,6 @@ const routeSchema=new Schema({
         type:String,
         required:true
     },
-    station:{
-        type: String,
-        required:true
-    },
     day: {
         type: Number,
         required: true
