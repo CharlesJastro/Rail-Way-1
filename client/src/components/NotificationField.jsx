@@ -17,8 +17,14 @@ const NotificationField = () => {
                 }).catch(function(error) {
                     console.log(error); 
                 });
-            // Set notificationList state to data retrieved from server
-            setNotificationList(data.data);
+            // Try catch block is intended to deal with no server error
+            try {
+                // Set notificationList state to data retrieved from server
+                setNotificationList(data.data);
+            } catch (error) {
+                console.log(error);
+            }
+            
         }
         // Actually call the fetch function
         fetchData();
