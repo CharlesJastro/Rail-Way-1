@@ -24,15 +24,12 @@ const NotificationField = () => {
             // Try catch block is intended to deal with no server error
             try {
                 // Go through dismissedList and filter out any notifications that the client has already dismissed
-                dismissedList.map(id => {
-                    data.data = data.data.filter(notice => notice._id !== id);
-                });
+                data.data = data.data.filter(notice => !dismissedList.includes(notice._id));
                 // Set notificationList state to data retrieved from server
                 setNotificationList(data.data);
             } catch (error) {
                 console.log(error);
             }
-            
         }
         // Actually call the fetch function
         fetchData();
@@ -44,10 +41,11 @@ const NotificationField = () => {
         // update notificationList state with filtered list
         setNotificationList(nList);
         // Add dismissed ID to dismissedList; this will trigger a useEffect
-        setDismissedList(dismissedList.concat(notificationList.find(notice => notice._id == id)._id));
+        setDismissedList(dismissedList.concat(notificationList.find(notice => notice._id === id)._id));
     }
     // useEffect that triggers when dismissedList updates
     React.useEffect(() => {
+        console.log('Use Effect in use');
         // Store dismissedList into localStorage
         localStorage.setItem('dismissedList', JSON.stringify(dismissedList));
     }, [dismissedList]);

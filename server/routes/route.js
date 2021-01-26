@@ -4,7 +4,7 @@ const express=require('express');
 const router=express.Router()
 const Route= require('../models/route')
 const {DateTime} = require('luxon');
-// const ExceptionRoutes = require('.../models/exceptionRoute);
+const ExceptionRoutes = require('../models/exceptionRoutes');
 
 const TIMEZONE = 'UTC-7';
 //console.log((DateTime.local().setZone(TIMEZONE)).isValid);
@@ -119,11 +119,16 @@ async function getExceptions(req, res, next) {
 // This function get a list of routes based on numerical day
 async function getRoutes(req, res, next) {
     let routes;
+    let exceptions;
     try {
         // Get routes based on numerical day
         routes = await Route.find({day: req.params.day});
+        exceptions = await ExceptionRoutes.find({day: req.params.day});
     } catch(err) {
         return res.status(500).json({message: err.message});
+    }
+    if (exceptions.length > 0) {
+        routes = exceptions;
     }
     // Get current server time
     let time = DateTime.local().setZone(TIMEZONE);

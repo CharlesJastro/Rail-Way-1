@@ -40,6 +40,8 @@ app.use(morgan('dev'));
 const routeRouter=require('./routes/route.js')
 // Create router for notification requests
 const notifRouter = require('./routes/notifications.js');
+// Create router for exceptions requests
+const exceptionsRouter = require('./routes/exceptions.js');
 //Router for STATIONS
 const stationsRouter=require('./routes/stations')
 //Use station router
@@ -48,6 +50,8 @@ app.use('/stations', stationsRouter)
 app.use('/routes',routeRouter)
 // Use notification router
 app.use('/notifications', notifRouter);
+// Use exceptions router
+app.use('/exceptions', exceptionsRouter);
 //let dt=DateTime.fromObject({hour: 12, minute: 37})
 
 //console.log(dt);
