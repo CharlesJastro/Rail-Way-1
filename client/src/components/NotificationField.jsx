@@ -29,6 +29,7 @@ const NotificationField = () => {
                 setNotificationList(data.data);
             } catch (error) {
                 console.log(error);
+                
             }
         }
         // Actually call the fetch function
