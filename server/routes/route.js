@@ -10,6 +10,8 @@ const TIMEZONE = 'UTC-7';
 //console.log((DateTime.local().setZone(TIMEZONE)).isValid);
 
 //GET-ALL
+
+
 router.get('/', async(req,res)=>{
     try{
         const route= await Route.find()
