@@ -1,128 +1,379 @@
 import React from 'react';
-import queryString from 'query-string';
+import axios from 'axios';
+import RouteDetail from '../RouteDetail';
 
-// JS Class rendering route information for each train line
-class RouteDetails extends React.Component {
-    componentDidMount() {
+const stations = [
+    {
+        name: 'Kaduna-Abuja',
+        day: 1,
+        code: 'KA1',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 8,
+        departureMinute: 31,
+        arrivalHour: 8,
+        arrivalMinute: 43,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 1,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 10,
+        departureMinute: 35,
+        arrivalHour: 12,
+        arrivalMinute: 59,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 1,
+        code: 'KA1',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 6,
+        departureMinute: 40,
+        arrivalHour: 8,
+        arrivalMinute: 28,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 1,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 13,
+        departureMinute: 4,
+        arrivalHour: 13,
+        arrivalMinute: 20,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 2,
+        code: 'KA1',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 6,
+        departureMinute: 40,
+        arrivalHour: 8,
+        arrivalMinute: 28,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 2,
+        code: 'KA1',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 8,
+        departureMinute: 31,
+        arrivalHour: 8,
+        arrivalMinute: 43,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 2,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 10,
+        departureMinute: 35,
+        arrivalHour: 12,
+        arrivalMinute: 59,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 2,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 13,
+        departureMinute: 4,
+        arrivalHour: 13,
+        arrivalMinute: 20,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 3,
+        code: 'KA1',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 6,
+        departureMinute: 40,
+        arrivalHour: 8,
+        arrivalMinute: 28,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 3,
+        code: 'KA1',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 8,
+        departureMinute: 31,
+        arrivalHour: 8,
+        arrivalMinute: 43,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 3,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 10,
+        departureMinute: 35,
+        arrivalHour: 12,
+        arrivalMinute: 59,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 3,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 13,
+        departureMinute: 4,
+        arrivalHour: 13,
+        arrivalMinute: 20,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 4,
+        code: 'KA1',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 6,
+        departureMinute: 40,
+        arrivalHour: 8,
+        arrivalMinute: 28,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 4,
+        code: 'KA1',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 8,
+        departureMinute: 31,
+        arrivalHour: 8,
+        arrivalMinute: 43,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 4,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 10,
+        departureMinute: 35,
+        arrivalHour: 12,
+        arrivalMinute: 59,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 4,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 13,
+        departureMinute: 4,
+        arrivalHour: 13,
+        arrivalMinute: 20,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 5,
+        code: 'KA1',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 6,
+        departureMinute: 40,
+        arrivalHour: 8,
+        arrivalMinute: 28,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 5,
+        code: 'KA1',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 8,
+        departureMinute: 31,
+        arrivalHour: 8,
+        arrivalMinute: 43,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 5,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 10,
+        departureMinute: 35,
+        arrivalHour: 12,
+        arrivalMinute: 59,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 5,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 13,
+        departureMinute: 4,
+        arrivalHour: 13,
+        arrivalMinute: 20,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 6,
+        code: 'KA1',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 6,
+        departureMinute: 40,
+        arrivalHour: 8,
+        arrivalMinute: 28,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 6,
+        code: 'KA1',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 8,
+        departureMinute: 31,
+        arrivalHour: 8,
+        arrivalMinute: 43,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 6,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 10,
+        departureMinute: 35,
+        arrivalHour: 12,
+        arrivalMinute: 59,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 6,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 13,
+        departureMinute: 4,
+        arrivalHour: 13,
+        arrivalMinute: 20,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 0,
+        code: 'KA2',
+        startingStation: 'Rigasa',
+        endingStation: 'Kubwa',
+        departureHour: 13,
+        departureMinute: 0,
+        arrivalHour: 14,
+        arrivalMinute: 49,
+        fare: 0
+    },
+    {
+        name: 'Kaduna-Abuja',
+        day: 6,
+        code: 'KA2',
+        startingStation: 'Kubwa',
+        endingStation: 'Idu',
+        departureHour: 14,
+        departureMinute: 54,
+        arrivalHour: 15,
+        arrivalMinute: 6,
+        fare: 0
+    },
+];
 
-    }
+const days = [0,1,2,3,4,5,6];
 
-    render() {
-        // This line of code can grab the :name varable from the url
-        let name = this.props.match.params.name;
-
-        // To obtain the exact weekday as a string.
-        let currentDay = new Date().getDay();
-
-        let weekdays = new Array(7);
-        weekdays[0] = "Sunday";
-        weekdays[1] = "Monday";
-        weekdays[2] = "Tuesday";
-        weekdays[3] = "Wednesday";
-        weekdays[4] = "Thursday";
-        weekdays[5] = "Friday";
-        weekdays[6] = "Saturday";
-
-        // Returns schedule for Monday - Saturday, else returns Sunday which is day 0.
-        if (currentDay > 0) {
-            return (
-                <div>
-                    {/* Display Route Name */}
-                    <h1>{name}</h1>
-                    {/* Display the exct weekday as a string. If there isn't a route scheduled on a certain day, either skip that weekday or display a message like "No service on {day}" */}
-                    {/* <p>Weekday</p> */}
-                    <h2>{weekdays[currentDay]}</h2>
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th rowSpan="2">Train Code</th>
-                                {/* From here we provide a variable number of stations each with a departure and arrival time except for the first and last stations. The first station would only have departure and the last will only have arrival */}
-                                <th>Rigasa</th>
-                                <th colSpan="2">Kubwa</th>
-                                <th>Idu</th>
-                            </tr>
-                            <tr>
-                                <td>Departure</td>
-                                <td>Arrival</td>
-                                <td>Departure</td>
-                                <td>Arrival</td>
-                            </tr>
-                            <tr>
-                                <td>KA1</td>
-                                <td>6:40 AM</td>
-                                <td>8:28 AM</td>
-                                <td>8:31 AM</td>
-                                <td>8:43 AM</td>
-                            </tr>
-                            <tr>
-                                <td>KA2</td>
-                                <td>10:35 AM</td>
-                                <td>12:59 PM</td>
-                                <td>1:04 PM</td>
-                                <td>1:20 PM</td>
-                            </tr>
-                            <tr>
-                                <td>KA3</td>
-                                <td>2:00 PM</td>
-                                <td>3:58 PM</td>
-                                <td>4:03 PM</td>
-                                <td>4:16 PM</td>
-                            </tr>
-                            <tr>
-                                <td>KA4</td>
-                                <td>6:00 PM</td>
-                                <td>8:04 PM</td>
-                                <td>8:07 PM</td>
-                                <td>8:20 PM</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            )
+const RouteDetails = (props) => {
+    const [routeName, setRouteName] = React.useState();
+    const [routeList, setRouteList] = React.useState([]);
+    
+    React.useEffect(() => {
+        setRouteName(props.match.params.name);
+        setRouteList(stations);
+    }, [props.match.params.name]);
+    
+    function getDay(day) {
+        switch(day) {
+            case 0:
+                return 'Sunday';
+            case 1:
+                return 'Monday';
+            case 2:
+                return 'Tuesday';
+            case 3:
+                return 'Wednesday';
+            case 4:
+                return 'Thursday';
+            case 5:
+                return 'Friday';
+            case 6:
+                return 'Saturday';
         }
-        else {
-            return (
-                <div>
-                {/* Display Route Name */}
-                <h1>{name}</h1>
-                {/* Display the exct weekday as a string. If there isn't a route scheduled on a certain day, either skip that weekday or display a message like "No service on {day}" */}
-                {/* <p>Weekday</p> */}
-                <h2>{weekdays[currentDay]}</h2>
-                <table>
-                    <tbody>
-                        <tr>
-                            <th rowSpan="2">Train Code</th>
-                            {/* From here we provide a variable number of stations each with a departure and arrival time except for the first and last stations. The first station would only have departure and the last will only have arrival */}
-                            <th>Rigasa</th>
-                            <th colSpan="2">Kubwa</th>
-                            <th>Idu</th>
-                        </tr>
-                        <tr>
-                            <td>Departure</td>
-                            <td>Arrival</td>
-                            <td>Departure</td>
-                            <td>Arrival</td>
-                        </tr>
-                        <tr>
-                            <td>KA1</td>
-                            <td>1:00 PM</td>
-                            <td>2:49 PM</td>
-                            <td>2:54 PM</td>
-                            <td>3:06 PM</td>
-                        </tr>
-                        <tr>
-                            <td>KA2</td>
-                            <td>4:00 PM</td>
-                            <td>6:02 PM</td>
-                            <td>6:07 PM</td>
-                            <td>6:21 PM</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            )
-        };
     }
+    
+    function getFunction(route) {
+        if (route.length === 0){
+            return (
+                <p>No data</p>
+            );
+        } else {
+            return (
+                <table style={{width:"100%"}}>
+                    {route.map((item, index) => (
+                        <RouteDetail key={index} data={item} />
+                    ))}
+                </table>
+            );
+        }
+    }
+    
+    return (
+        <div>
+            <h1>{routeName}</h1>
+            {days.map((day) => (
+                <div>
+                    <h1>{getDay(day)}</h1>
+                    {getFunction(routeList.filter((route) => route.day === day).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute))}
+                </div>
+            ))}  
+        </div>
+    );
 }
 
 export default RouteDetails;

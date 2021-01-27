@@ -1,6 +1,5 @@
 import React from 'react';
 import {ListSubItem} from '../ListSubItem';
-import {DateTime} from 'luxon';
 
 // Route event handler
 const ListItem = ({id, data}) => {
