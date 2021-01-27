@@ -12,6 +12,10 @@ router.get('/', async(req,res)=>{
         res.status(500).json({message: err.message})
     }
 })
+//GET BY DAY WITH ID
+router.get('/day/:id', getStations, (req,res)=>{
+    res.json(res.stations);
+});
 //Geeting One or ID
 router.get('/:id',getStations,(req,res)=>{
     res.json(res.stations)

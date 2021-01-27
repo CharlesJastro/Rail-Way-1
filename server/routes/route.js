@@ -31,9 +31,9 @@ router.get('/day/:day', getRoutes, (req,res)=>{
     res.json(res.route);
 });
 //GET BY STATION
-router.get('/station/:id',getRoute,(req,res)=>{
-    res.json(res.route)
-})
+// router.get('/station/:id',getRoute,(req,res)=>{
+//     res.json(res.route)
+// })
 //CREATE
 router.post('/', async(req,res)=>{
     const route= new Route({
