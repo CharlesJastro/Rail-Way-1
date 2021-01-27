@@ -1,6 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 
+
 // JS Class rendering route information for each train line
 class RouteDetails extends React.Component {
     componentDidMount() {
@@ -37,7 +38,7 @@ class RouteDetails extends React.Component {
                             <tr>
                                 <th rowSpan="2">Train Code</th>
                                 {/* From here we provide a variable number of stations each with a departure and arrival time except for the first and last stations. The first station would only have departure and the last will only have arrival */}
-                                <th>Rigasa</th>
+                                <th>Rigasa</th>  
                                 <th colSpan="2">Kubwa</th>
                                 <th>Idu</th>
                             </tr>
