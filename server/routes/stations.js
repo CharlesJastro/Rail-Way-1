@@ -31,7 +31,8 @@ router.post('/', async(req,res)=>{
         departureMinute:req.body.departureMinute,
         arrivalHour:req.body.arrivalHour,
         arrivalMinute:req.body.arrivalMinute,
-        fare:req.body.fare
+        fare:req.body.fare,
+        code:req.body.code
     })
     try{
         const newStations= await stations.save()
