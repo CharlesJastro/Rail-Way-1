@@ -7,8 +7,9 @@ const stationsSchema=new mongoose.Schema({
         required:true
     },
     day:{
-        type:String,
+        type:Number,
         required:true
+    
     },
     startingStation:{
         type:String,
@@ -41,6 +42,10 @@ const stationsSchema=new mongoose.Schema({
     fare:{
         type:Number,
         required:true
+    },
+    code:{
+        type:String,
+        required:true,
     }
 })
 module.exports=mongoose.model("Stations",stationsSchema)

@@ -10,7 +10,7 @@ class NavBar extends Component {
         return (
             <div className="">
           
-               <Button Routes><Link to="/">Routes</Link></Button> 
+               <Button><Link to="/">Routes</Link></Button> 
                <Button><Link to="/travel">Travel</Link></Button> 
                <Button><Link to="/favourites">Favourites</Link></Button> 
             </div>

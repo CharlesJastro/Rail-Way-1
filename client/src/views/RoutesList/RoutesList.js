@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import {render} from 'react-dom';
 import axios from 'axios';
 import {DateTime} from 'luxon';
 import {ListItem} from '../../components/ListItem';
 import './RoutesList.css';
-import { ListSubItem } from '../../components/ListSubItem';
 
 // JS class rendering the Route page of the navbar
 class RoutesList extends Component {
