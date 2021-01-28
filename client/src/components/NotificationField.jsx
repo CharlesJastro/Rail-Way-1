@@ -10,31 +10,36 @@ const NotificationField = () => {
     const savedList = JSON.parse(localStorage.getItem('dismissedList'));
     // Set dismissedList to either savedList or empty list
     const [dismissedList, setDismissedList] = React.useState(savedList || []);
+
+    const [notificationData, setNotificationData] = React.useState([]);
     // componentDidMount() method
     React.useEffect(() => {
         // Get notifications from server
         async function fetchData() {
-            let data = await axios
-                .get('/notifications/')
-                .then(function(response) {
-                    return response;
-                }).catch(function(error) {
-                    console.log(error); 
-                });
-            // Try catch block is intended to deal with no server error
+            let data
             try {
-                // Go through dismissedList and filter out any notifications that the client has already dismissed
-                data.data = data.data.filter(notice => !dismissedList.includes(notice._id));
-                // Set notificationList state to data retrieved from server
-                setNotificationList(data.data);
+                data = await axios
+                    .get('/notifications/')
             } catch (error) {
                 console.log(error);
-                
-            }
+            };
+            setNotificationData(data.data);
         }
         // Actually call the fetch function
         fetchData();
     }, []);
+
+    React.useEffect(() => {
+        // Try catch block is intended to deal with no server error
+        try {
+            // Go through dismissedList and filter out any notifications that the client has already dismissed
+            // Set notificationList state to data retrieved from server
+            setNotificationList(notificationData.filter(notice => !dismissedList.includes(notice._id)));
+        } catch (error) {
+            console.log(error);
+        }
+    }, [notificationData, dismissedList]);
+
     // Function for dismissing a notification
     function handleRemove(id) {
         // Filter out any notification containing the specified id
@@ -46,17 +51,26 @@ const NotificationField = () => {
     }
     // useEffect that triggers when dismissedList updates
     React.useEffect(() => {
-        console.log('Use Effect in use');
         // Store dismissedList into localStorage
         localStorage.setItem('dismissedList', JSON.stringify(dismissedList));
     }, [dismissedList]);
-    
-    return (
-        <div>
-            {notificationList.map((notice, index) => (
-                <NotificationItem key={'notice-'+index} notice={notice} onRemove={handleRemove} />
-            ))}
-        </div>
+
+    return ( <
+        div > {
+            notificationList.map((notice, index) => ( <
+                NotificationItem key = {
+                    'notice-' + index
+                }
+                notice = {
+                    notice
+                }
+                onRemove = {
+                    handleRemove
+                }
+                />
+            ))
+        } <
+        /div>
     );
 }
 

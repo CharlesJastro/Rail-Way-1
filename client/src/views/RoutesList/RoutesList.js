@@ -23,13 +23,13 @@ class RoutesList extends Component {
     // function returning route information for each day
     async getRoutes() {
         let currentDay = new Date().getDay();
-        let data = await axios
-            .get(`/routes/day/${currentDay}`)
-            .then(function(response) {
-                return response;
-            }).catch(function(error) {
-                console.log(error);
-            });
+        let data;
+        try {
+            data = await axios
+                .get(`/routes/day/${currentDay}`)
+        }catch(error) {
+            console.log(error);
+        }
         try {
             this.setState({routes: data.data});
             if (this.state.routes.length > 0) {
