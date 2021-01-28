@@ -10,9 +10,9 @@ class NavBar extends Component {
         return (
             <div className="">
           
-               <Button><Link to="/">Routes</Link></Button> 
-               <Button><Link to="/travel">Travel</Link></Button> 
-               <Button><Link to="/favourites">Favourites</Link></Button> 
+               <Button as={Link} to="/">Routes</Button> 
+               <Button as={Link} to="/travel">Travel</Button> 
+               <Button as={Link} to="/favourites">Favourites</Button> 
             </div>
         );
     }
