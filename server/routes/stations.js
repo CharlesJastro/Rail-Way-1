@@ -72,7 +72,7 @@ router.patch('/:id',getStations, async(req,res)=>{
         res.stations.fare=req.body.fare
     }
     if(req.body.code != null) {
-        res.stations.code=req.stations.code
+        res.stations.code=req.body.code
     }
     try{
         const updatedStations= await res.stations.save()

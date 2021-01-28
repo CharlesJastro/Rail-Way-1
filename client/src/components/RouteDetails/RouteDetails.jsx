@@ -388,7 +388,7 @@ console.log (routeList)
             {days.map((day) => (
                 <div>
                     <h1>{getDay(day)}</h1>
-                    {getFunction(routeList.filter((route) => route.day === day).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute))}
+                    {getFunction(routeList.filter((route) => route.name === routeName).filter((route) => route.day === day).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute))}
                 </div>
             ))}  
         </div>
