@@ -84,7 +84,7 @@ class RoutesList extends Component {
                         </thead>
                         <tbody>
                             {this.state.routes.map((route, index) => (
-                             <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare, route.status]}/>
+                                <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare, ...(DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? ["Departing Soon"] : [route.status])]}/>
                             ))}
                         </tbody>
                     </table>
@@ -109,5 +109,3 @@ class RoutesList extends Component {
 };
 
 export default RoutesList;
-
-/* <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare]}/> */
