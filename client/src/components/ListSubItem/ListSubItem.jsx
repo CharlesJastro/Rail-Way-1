@@ -2,7 +2,7 @@ import React from 'react';
 
 // Returns route list subitem in RouteDetails.jsx
 const ListSubItem = ({data}) => {
-  return (
+    return (
   
       <td>{data}</td>
 

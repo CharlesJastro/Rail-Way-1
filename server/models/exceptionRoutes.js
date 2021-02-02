@@ -34,6 +34,15 @@ const exceptionSchema=new Schema({
         type:Number,
         required:true
     },
+    status: {
+        type: String,
+        required: true,
+        default: "Disruption"
+    },
+    id:{
+        type:String,
+        required:true
+    }
 
 },{timestamps:true});
 

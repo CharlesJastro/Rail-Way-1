@@ -23,7 +23,7 @@ const NotificationField = () => {
             } catch (error) {
                 console.log(error);
             };
-            setNotificationData(data.data);
+            setNotificationData(data);
         }
         // Actually call the fetch function
         fetchData();
@@ -34,7 +34,7 @@ const NotificationField = () => {
         try {
             // Go through dismissedList and filter out any notifications that the client has already dismissed
             // Set notificationList state to data retrieved from server
-            setNotificationList(notificationData.filter(notice => !dismissedList.includes(notice._id)));
+            setNotificationList(notificationData.data.filter(notice => !dismissedList.includes(notice._id)));
         } catch (error) {
             console.log(error);
         }
