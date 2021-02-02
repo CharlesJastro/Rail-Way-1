@@ -333,6 +333,7 @@ const RouteDetails = (props) => {
     }, [props.match.params.name]);
     
     function getDay(day) {
+        /* eslint-disable */
         switch(day) {
             case 0:
                 return 'Sunday';
@@ -349,6 +350,7 @@ const RouteDetails = (props) => {
             case 6:
                 return 'Saturday';
         }
+        /* eslint-enable */
     }
     
     function getFunction(route) {

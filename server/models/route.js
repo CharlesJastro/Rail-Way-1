@@ -34,6 +34,11 @@ const routeSchema=new Schema({
         type:Number,
         required:true
     },
+    status: {
+        type: String,
+        required: true,
+        default: "On Time"
+    }
 
 },{timestamps:true});
 

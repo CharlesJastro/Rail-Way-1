@@ -3,6 +3,7 @@ import axios from 'axios';
 import {DateTime} from 'luxon';
 import {ListItem} from '../../components/ListItem';
 import './RoutesList.css';
+import loadingGif from './animation_500_kknnq4t6.gif'
 
 // JS class rendering the Route page of the navbar
 class RoutesList extends Component {
@@ -22,6 +23,12 @@ class RoutesList extends Component {
     
     // function returning route information for each day
     async getRoutes() {
+        /*const sleep = (milliseconds) => {
+            return new Promise(resolve => setTimeout(resolve, milliseconds))
+        }
+        await sleep(50000).then(() => {
+            
+        })*/
         let currentDay = new Date().getDay();
         let data;
         try {
@@ -49,6 +56,7 @@ class RoutesList extends Component {
     
     // JSX rendering Route List information on Route page of the navbar
     render() {
+        console.log(DateTime.local().plus({minutes:15})>DateTime.local());
         if (this.state.connection === -1) {
             console.log('Error');
             return (
@@ -71,11 +79,12 @@ class RoutesList extends Component {
                                 <th>Departure Time</th>
                                 <th>Arrival Time</th>
                                 <th>Fare</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {this.state.routes.map((route, index) => (
-                             <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare]}/>
+                             <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare, route.status]}/>
                             ))}
                         </tbody>
                     </table>
@@ -92,7 +101,7 @@ class RoutesList extends Component {
             return (
                 <div className="ui container routesList">
                     <h2>Routes List</h2>
-                    <p>Loading...</p>
+                    <img src={loadingGif} alt="loading train" />
                 </div>
             );
         }  

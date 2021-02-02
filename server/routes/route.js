@@ -44,7 +44,8 @@ router.post('/', async(req,res)=>{
         departureMinute:req.body.departureMinute,
         arrivalHour:req.body.arrivalHour,
         arrivalMinute:req.body.arrivalMinute,
-        fare:req.body.fare
+        fare:req.body.fare,
+        status:req.body.status
     })
     try{
         const newRoute= await route.save()
@@ -76,7 +77,10 @@ router.patch('/:id', getRoute, async(req,res)=>{
         res.route.arrivalMinute=req.body.arrivalMinute
     }if(req.body.fare !=null){
         res.route.fare=req.body.fare
-    }try{
+    }if(req.body.status !=null) {
+        res.route.status=req.body.status
+    }
+    try{
         const updateRoute=await res.route.save()
         res.json(updateRoute)
     }catch(err){
@@ -128,13 +132,14 @@ async function getRoutes(req, res, next) {
         return res.status(500).json({message: err.message});
     }
     if (exceptions.length > 0) {
-        routes = exceptions;
+        //routes = exceptions;
+        routes = routes.map((route) => exceptions.find((exception) => exception.id == route._id.toString()) || route);
     }
     // Get current server time
     let time = DateTime.local().setZone(TIMEZONE);
     // Perform all the filtering, sorting, and mapping to pass the relavent information
     routes = routes.filter(route => (
-        DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}) > DateTime.local().setZone(TIMEZONE))).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).filter((route, index, self) => index === self.findIndex((t) => (t.name === route.name))).map((route) => ({_id: route._id, name: route.name, day: route.day, departure: DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}), arrival: DateTime.fromObject({zone: TIMEZONE, hour: route.arrivalHour, minute: route.arrivalMinute}), fare: route.fare}));
+        DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}) > DateTime.local().setZone(TIMEZONE))).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).filter((route, index, self) => index === self.findIndex((t) => (t.name === route.name))).map((route) => ({_id: route._id, name: route.name, day: route.day, departure: DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}), arrival: DateTime.fromObject({zone: TIMEZONE, hour: route.arrivalHour, minute: route.arrivalMinute}), fare: route.fare, status: route.status}));
     res.route=routes;
     next();
 }
