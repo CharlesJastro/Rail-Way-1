@@ -55,8 +55,8 @@ const NotificationField = () => {
         localStorage.setItem('dismissedList', JSON.stringify(dismissedList));
     }, [dismissedList]);
 
-    return ( <
-        div > {
+    return (
+        <div> {
             notificationList.map((notice, index) => ( <
                 NotificationItem key = {
                     'notice-' + index
@@ -69,8 +69,8 @@ const NotificationField = () => {
                 }
                 />
             ))
-        } <
-        /div>
+        } 
+       </div>
     );
 }
 
