@@ -2,6 +2,8 @@ import React from 'react';
 import axios from 'axios';
 import {DateTime} from 'luxon';
 import RouteDetail from '../RouteDetail';
+import StationsTable from './StationsTable'; 
+
 
 // const stations = [
 //     {
@@ -382,32 +384,11 @@ const RouteDetails = (props) => {
                 self.indexOf(value) === index
             ));
             console.log(DateTime.fromObject({weekday:0}).toLocaleString());
+          
             
-            return (
-                <table style={{width:"100%"}}>
-                    <tbody>
-                       <tr>
-                          <th rowSpan="2">Code</th>
-                            {stationList.map((item, index) => (
-                                index > 0 && index < stationList.length-1 ? <th colSpan="2">{item}</th> :  <th>{item}</th>
-                            ))}
-                       </tr>
-                       <tr>
-                           {stationList.map((item, index) => (
-                                index === 0 ? <td>Departure</td> : index === stationList.length-1 ? <td>Arrival</td> : [<td>Arrival</td>,<td>Departure</td>]
-                            ))}
-                       </tr>
-                       {codeList.map((code) => (
-                            <tr>
-                                <td>{code}</td>
-                                {route.filter((line) => line.code === code).map((item, index) => (
-                                    [<td>{DateTime.fromObject({hour: item.departureHour, minute: item.departureMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>,<td>{DateTime.fromObject({hour: item.arrivalHour, minute: item.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>]
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            );
+            return(
+           <StationsTable stationList={stationList} codeList={codeList} route={route} />
+            )
         }
     }
     
