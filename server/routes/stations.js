@@ -3,6 +3,9 @@ const express=require('express');
 const stations = require('../models/stations');
 const router=express.Router()
 const Stations=require('../models/stations')
+const {DateTime} = require('luxon');
+
+const TIMEZONE = 'UTC-7';
 //Getting All
 router.get('/', async(req,res)=>{
     try{
@@ -12,14 +15,15 @@ router.get('/', async(req,res)=>{
         res.status(500).json({message: err.message})
     }
 })
-//GET BY DAY WITH ID
-router.get('/day/:id', getStations, (req,res)=>{
+//GET BY NAME
+router.get('/name/:name', getStations, (req,res)=>{
     res.json(res.stations);
 });
 //Geeting One or ID
-router.get('/:id',getStations,(req,res)=>{
+router.get('/:id',getStation,(req,res)=>{
     res.json(res.stations)
-})
+});
+
 //CREATING STATION
 router.post('/', async(req,res)=>{
     const stations=new Stations({
@@ -94,7 +98,7 @@ router.delete('/:id',getStations, async(req,res)=>{
     }
 })
 //MIDDLEWARE STATION ROUTE
-async function getStations(req,res,next){
+async function getStation(req,res,next){
     let stations
     try{
         stations=await Stations.findById(req.params.id)
@@ -105,6 +109,36 @@ async function getStations(req,res,next){
     catch(err){
         return res.status(500).json({message:err.message})
     }
+    res.stations=stations
+    next()
+}
+async function getStations(req,res,next){
+    let stations
+    try{
+        stations=await Stations.find({name: req.params.name});
+    }
+    catch(err){
+        return res.status(500).json({message:err.message})
+    }
+    // Get current server time
+    let time = DateTime.local().setZone(TIMEZONE);
+    // Perform all the filtering, sorting, and mapping to pass the relavent information
+    stations = stations.sort((a, b) => (
+        a.departureHour-b.departureHour || a.departureMinute-b.departureMinute
+    )).map((station) => (
+        {
+            _id: station._id, 
+            name: station.name, 
+            day: station.day,
+            code: station.code,
+            startingStation: station.startingStation,
+            endingStation: station.endingStation,
+            departure: DateTime.fromObject({zone: TIMEZONE, hour: station.departureHour, minute: station.departureMinute}),
+            arrival: DateTime.fromObject({zone: TIMEZONE, hour: station.arrivalHour, minute: station.arrivalMinute}),
+            fare: station.fare,
+            status: station.status
+        }
+    ));
     res.stations=stations
     next()
 }

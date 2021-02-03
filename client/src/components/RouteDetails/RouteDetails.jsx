@@ -326,10 +326,12 @@ const RouteDetails = (props) => {
     
     React.useEffect(() => {
         setRouteName(props.match.params.name);
-        
+    }, [props.match.params.name]);
+    
+    React.useEffect(() => {
         async function fetchData (){
            let Data=await axios
-           .get('/stations/')
+           .get(`/stations/name/${routeName}`)
            .then(function(response) {
                return response;
            }).catch(function(error) {
@@ -340,9 +342,7 @@ const RouteDetails = (props) => {
           }catch(error){}
         }
         fetchData()
-      
-
-    }, [props.match.params.name]);
+    }, [routeName]);
     
     function getDay(day) {
         /* eslint-disable */
@@ -371,37 +371,44 @@ const RouteDetails = (props) => {
                 <p>No data</p>
             );
         } else {
+            // Get list of starting stations
             let stationList = route.map((item, index) => item.startingStation);
+            // Get list of ending stations
             let stationList2 = route.map((item, index) => item.endingStation);
+            // Merge both lists together
             stationList = stationList.concat(stationList2);
+            // Only get unique values in the list
             stationList = stationList.filter((value, index, self) => (
                 self.indexOf(value) === index
             ));
+            // Get list of codes
             let codeList = route.map((item, index) => item.code);
+            // Only get unique values in the list
             codeList = codeList.filter((value, index, self) => (
                 self.indexOf(value) === index
             ));
-            console.log(DateTime.fromObject({weekday:0}).toLocaleString());
-            
             return (
                 <table style={{width:"100%"}}>
                     <tbody>
                        <tr>
                           <th rowSpan="2">Code</th>
                             {stationList.map((item, index) => (
-                                index > 0 && index < stationList.length-1 ? <th colSpan="2">{item}</th> :  <th>{item}</th>
+                                index > 0 && index < stationList.length-1 ? <th key={index + item} colSpan="2">{item}</th> :  <th key={index + item}>{item}</th>
                             ))}
                        </tr>
                        <tr>
                            {stationList.map((item, index) => (
-                                index === 0 ? <td>Departure</td> : index === stationList.length-1 ? <td>Arrival</td> : [<td>Arrival</td>,<td>Departure</td>]
+                                index === 0 ? <td key={index + item + "Departure"}>Departure</td> : index === stationList.length-1 ? <td key={index + item + "Arrival"}>Arrival</td> : [<td key={index + item + "Arrival"}>Arrival</td>,<td key={index + item + "Departure"}>Departure</td>]
                             ))}
                        </tr>
                        {codeList.map((code) => (
-                            <tr>
+                            <tr key={code}>
                                 <td>{code}</td>
                                 {route.filter((line) => line.code === code).map((item, index) => (
-                                    [<td>{DateTime.fromObject({hour: item.departureHour, minute: item.departureMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>,<td>{DateTime.fromObject({hour: item.arrivalHour, minute: item.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>]
+                                    [
+                                        <td key={code + "Departure"}>{DateTime.fromISO(item.departure).toLocaleString(DateTime.TIME_SIMPLE)}</td>,
+                                        <td key={code + "Arrival"}>{DateTime.fromISO(item.arrival).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+                                    ]
                                 ))}
                             </tr>
                         ))}
@@ -415,9 +422,9 @@ const RouteDetails = (props) => {
         <div>
             <h1>{routeName}</h1>
             {days.map((day) => (
-                <div>
+                <div key={day}>
                     <h1>{getDay(day)}</h1>
-                    {getFunction(routeList.filter((route) => route.name === routeName).filter((route) => route.day === day).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute))}
+                    {getFunction(routeList.filter((route) => route.day === day))}
                 </div>
             ))}  
         </div>
