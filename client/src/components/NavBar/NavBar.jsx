@@ -9,7 +9,7 @@ class NavBar extends Component {
     render() {
         return (
             <div className="">
-          
+           {/* Navbar Buttons */}
                <Button as={Link} to="/">Routes</Button> 
                <Button as={Link} to="/travel">Travel</Button> 
                <Button as={Link} to="/favourites">Favourites</Button> 
