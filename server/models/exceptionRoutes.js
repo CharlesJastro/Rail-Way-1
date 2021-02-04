@@ -39,7 +39,7 @@ const exceptionSchema=new Schema({
         required: true,
         default: "Disruption"
     },
-    id:{
+    routeId:{
         type:String,
         required:true
     }

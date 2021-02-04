@@ -25,7 +25,7 @@ router.post('/', async(req, res) => {
         arrivalHour: req.body.arrivalHour,
         arrivalMinute: req.body.arrivalMinute,
         fare: req.body.fare,
-        id: req.body.id,
+        routeId: req.body.routeId,
         status: req.body.status
     });
     try {
@@ -58,8 +58,8 @@ router.patch('/:id', getException, async(req,res)=>{
     if(req.body.fare !=null){
         res.exception.fare=req.body.fare;
     }
-    if(req.body.id !=null) {
-        res.exception.id=req.body.id;
+    if(req.body.routeId !=null) {
+        res.exception.routeId=req.body.routeId;
     }
     if(req.body.status !=null) {
         res.exception.status=req.body.status;
