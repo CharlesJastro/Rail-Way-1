@@ -1,4 +1,4 @@
-# Rail-Way
+# Rail-Way: rail transit application for developing country
 
 # Members
 Charles Udofia <br/>

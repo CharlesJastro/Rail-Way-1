@@ -34,11 +34,10 @@ router.get('/day/:day', getRoutes, (req,res)=>{
 // router.get('/station/:id',getRoute,(req,res)=>{
 //     res.json(res.route)
 // })
-//CREATE
+//CREATE post request
 router.post('/', async(req,res)=>{
     const route= new Route({
         name:req.body.name,
-        
         day: req.body.day,
         departureHour:req.body.departureHour,
         departureMinute:req.body.departureMinute,
@@ -54,7 +53,7 @@ router.post('/', async(req,res)=>{
         res.status(400).json({message:err.message})
     }
 })
-//UPDATE
+//UPDATE request
 router.patch('/:id', getRoute, async(req,res)=>{
     if(req.body.name !==null){
         res.route.name=req.body.name
@@ -87,7 +86,7 @@ router.patch('/:id', getRoute, async(req,res)=>{
         res.status(400).json({message : err.message})
     }
 })
-//DELETE
+//DELETE request
 router.delete('/:id',getRoute, async(req,res)=>{
     try{
         await res.route.remove()

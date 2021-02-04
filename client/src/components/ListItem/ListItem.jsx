@@ -2,7 +2,7 @@ import React from 'react';
 import {ListSubItem} from '../ListSubItem';
 import { Popup } from 'semantic-ui-react'
 
-// Route event handler
+// Route event handler to see all station schedule
 const ListItem = ({id, className, data}) => {
     return (
         <Popup

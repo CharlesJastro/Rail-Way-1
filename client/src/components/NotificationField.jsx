@@ -11,7 +11,7 @@ const NotificationField = () => {
     // Set dismissedList to either savedList or empty list
     const [dismissedList, setDismissedList] = React.useState(savedList || []);
 
-    const [notificationData, setNotificationData] = React.useState([]);
+     const [notificationData, setNotificationData] = React.useState([]);
     // componentDidMount() method
     React.useEffect(() => {
         // Get notifications from server

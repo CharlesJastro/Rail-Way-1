@@ -1,5 +1,5 @@
-// Schema for handling/receiving data into our mongo database
-// Schema for notifications
+// Schema for handling/receiving notifications in our mongo database
+
 const mongoose = require('mongoose');
 
 const Schema= mongoose.Schema;
