@@ -15,7 +15,7 @@ router.get('/', async(req, res) => {
 router.get('/:id', getException,(req,res)=>{
     res.json(res.exception);
 });
-// Create new exception
+// Create post request
 router.post('/', async(req, res) => {
     const exception = new Exceptions({
         name: req.body.name,

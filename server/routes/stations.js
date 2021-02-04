@@ -16,11 +16,11 @@ router.get('/', async(req,res)=>{
 router.get('/day/:id', getStations, (req,res)=>{
     res.json(res.stations);
 });
-//Geeting One or ID
+//Getting by ID
 router.get('/:id',getStations,(req,res)=>{
     res.json(res.stations)
 })
-//CREATING STATION
+//CREATING post request for station
 router.post('/', async(req,res)=>{
     const stations=new Stations({
         name: req.body.name,

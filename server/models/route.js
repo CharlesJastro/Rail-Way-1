@@ -1,4 +1,4 @@
-// Schema for handling/receiving data into our mongo database
+// Schema for handling/receiving route list data into our mongo database
 const mongoose = require('mongoose');
 
 const Schema= mongoose.Schema;

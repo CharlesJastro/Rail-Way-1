@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Notification component of route details
 const NotificationItem = ({notice, onRemove}) => {
     return (
         <div className={'notice-'+notice.urgency}>

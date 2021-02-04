@@ -5,9 +5,9 @@ import RouteDetail from '../RouteDetail';
 import StationsTable from './StationsTable'; 
 
 
-    // Display Station schedule for each day in rows
+    // Conect axios to stations route in database
 
-const days = [0,1,2,3,4,5,6];
+
 
 const RouteDetails = (props) => {
     const [routeName, setRouteName] = React.useState();
@@ -33,8 +33,11 @@ const RouteDetails = (props) => {
 
     }, [props.match.params.name]);
     
+// Return current day of the week
+    const days = [0,1,2,3,4,5,6];
+
     function getDay(day) {
-        /* eslint-disable */
+        
         switch(day) {
             case 0:
                 return 'Sunday';
@@ -51,9 +54,10 @@ const RouteDetails = (props) => {
             case 6:
                 return 'Saturday';
         }
-        /* eslint-enable */
+        
     }
     
+    // concatenate station list to display on the same row
     function getFunction(route) {
         if (route.length === 0){
             return (
@@ -72,13 +76,14 @@ const RouteDetails = (props) => {
             ));
             console.log(DateTime.fromObject({weekday:0}).toLocaleString());
           
-            
+            // calls StationsTable.js as a separate component
             return(
            <StationsTable stationList={stationList} codeList={codeList} route={route} />
             )
         }
     }
     
+    // Display station list
     return (
         <div>
             <h1>{routeName}</h1>

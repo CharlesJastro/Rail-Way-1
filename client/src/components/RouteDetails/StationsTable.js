@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import {DateTime} from 'luxon';
  
- // Create a react component
+ //  Separate react component to display station schedule for each day in rows
  const StationsTable = function (props) {
     console.log("Station Table is running");
     return (
