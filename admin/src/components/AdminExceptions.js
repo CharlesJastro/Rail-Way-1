@@ -128,7 +128,7 @@ class AdminExceptions extends Component{
     });
     return(
       <div className="App container">
-        <h2>RAILWAY ADMIN PAGE</h2>
+        <h2>RAILWAY ADMIN PAGE - EXCEPTIONS</h2>
 
 <Button className="my-3" color="primary" onClick={this.toggleNewExceptionModal.bind(this)}>Create</Button>
 {/* POST MODEL START */}
