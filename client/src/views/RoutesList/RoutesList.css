@@ -37,9 +37,9 @@ td {
   100% { opacity:1; }
 }
 .animate-flicker {
-   -webkit-animation: flickerAnimation .5s infinite;
-   -moz-animation: flickerAnimation .5s infinite;
-   -o-animation: flickerAnimation .5s infinite;
-    animation: flickerAnimation .5s infinite;
+   -webkit-animation: flickerAnimation 1.5s infinite;
+   -moz-animation: flickerAnimation 1.5s infinite;
+   -o-animation: flickerAnimation 1.5s infinite;
+    animation: flickerAnimation 1.5s infinite;
     color: darkred;
 }

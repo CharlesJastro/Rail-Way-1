@@ -5,6 +5,8 @@ import {ListItem} from '../../components/ListItem';
 import './RoutesList.css';
 import loadingGif from './animation_500_kknnq4t6.gif'
 
+const currency = '\u20A6';
+
 // JS class rendering the Route page of the navbar
 class RoutesList extends Component {
     constructor() {
@@ -84,7 +86,7 @@ class RoutesList extends Component {
                         </thead>
                         <tbody>
                             {this.state.routes.map((route, index) => (
-                                <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), route.fare, ...(DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? ["Departing Soon"] : [route.status])]}/>
+                                <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), [<p>{currency} {route.fare}</p>], ...(DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? ["Departing Soon" + "/" + route.status] : [route.status])]}/>
                             ))}
                         </tbody>
                     </table>
