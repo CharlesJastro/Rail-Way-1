@@ -1,12 +1,14 @@
 import React from 'react';
 import './Header.css';
+import {Image} from 'semantic-ui-react';
+import trainImg from './classic_locomotive_train_312396.jpg';
 
 // Javascript class rendering logo image
 class Header extends React.Component {
     render() {
         return (
             <div>
-                <img src="https://img1.pnghut.com/19/9/15/ZWiBE3Vx8j/car-rapid-transit-automotive-design-freight-transport-new-york-city-subway.jpg" alt="train" /> 
+                <Image src={trainImg} alt="train" centered size="large" /> 
             </div>
         )
     } 

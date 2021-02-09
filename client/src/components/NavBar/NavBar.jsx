@@ -1,22 +1,31 @@
 import React, { Component } from 'react'
 /*import { Menu } from 'semantic-ui-react'*/
 import {Link} from 'react-router-dom';
-import {Button} from 'semantic-ui-react';
+import {Menu} from 'semantic-ui-react';
 import './NavBar.css';
 
 // Javascript class rendering navbar
 class NavBar extends Component {
-    render() {
+    /*render() {
         return (
             <div className="">
-           {/* Navbar Buttons */}
+           {/* Navbar Buttons }
                <Button as={Link} to="/">Routes</Button> 
                <Button as={Link} to="/travel">Travel</Button> 
                <Button as={Link} to="/favourites">Favourites</Button> 
             </div>
         );
-    }
+    }*/
     
+    render() {
+        return (
+            <Menu widths={3} color='brown' inverted>
+                <Menu.Item as={Link} to='/'>Routes</Menu.Item>
+                <Menu.Item as={Link} to='/travel'>Travel</Menu.Item>
+                <Menu.Item as={Link} to='/favourites'>Favourites</Menu.Item>
+            </Menu>
+        )
+    }
     
     /*state = {}
 
