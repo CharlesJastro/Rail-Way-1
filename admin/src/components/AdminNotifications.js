@@ -52,7 +52,7 @@ class AdminNotifications extends Component{
     axios.patch('/notifications/' + this.state.editNotificationData._id,{
       title, urgency, message,
     }).then((response)=>{
-      this._refreshNotification()
+      this._refreshNotifications()
       this.setState({
         editNotificationModal:false, editNotificationData:{
       _id:'',
