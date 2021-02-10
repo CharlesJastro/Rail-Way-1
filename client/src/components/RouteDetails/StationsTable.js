@@ -4,7 +4,7 @@ import {DateTime} from 'luxon';
  
  //  Separate react component to display station schedule for each day in rows
  const StationsTable = function (props) {
-
+    console.log("Station Table is running");
     return (
         <table style={{width:"100%"}}>
             <tbody>
