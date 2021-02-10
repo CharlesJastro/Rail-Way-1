@@ -7,11 +7,12 @@ import TimePicker from 'react-time-picker';
 class AdminRoutes extends Component{
   state={
     routes:[],
-    dateTime: '',
+    departureDateTime: '',
+    arrivalDateTime: '',
     newRouteData:{
       name:'',
-      status:'',
-      day:'',
+      status:'On Time',
+      day:0,
       departureHour:'',
       departureMinute:'',
       arrivalHour:'',
@@ -51,7 +52,10 @@ class AdminRoutes extends Component{
   toggleNewRouteModal(){
     this.setState({
       newRouteModal: !this.state.newRouteModal
-    })
+    });
+    if (!this.state.newRouteModel) {
+        this.resetAddForm();
+    }
   }
   toggleEditRouteModal(){
     this.setState({
@@ -68,17 +72,9 @@ class AdminRoutes extends Component{
     axios.post('/routes', this.state.newRouteData).then((response)=>{
       let{ routes } = this.state;
       routes.push(response.data);
-      this.setState({routes, newRouteModal:false, newRouteData:{
-      name:'',
-      status:'',
-      day:'',
-      departureHour:'',
-      departureMinute:'',
-      arrivalHour:'',
-      arrivalMinute:'',
-      fare:''
-    }})
+      this.setState({routes, newRouteModal:false})
     });
+    this.resetAddForm();
   }
   addException(){
     axios.post('/exceptions', this.state.newExceptionData).then((response)=>{
@@ -97,7 +93,9 @@ class AdminRoutes extends Component{
   }
   createException(routeId,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare){
       this.setState({
-      newExceptionData:{routeId,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare}, newExceptionModal:! this.state.newExceptionModal
+      newExceptionData:{routeId,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare}, newExceptionModal:! this.state.newExceptionModal,
+      departureDateTime: DateTime.fromObject({hour: departureHour, minute: departureMinute}).toLocaleString(DateTime.TIME_SIMPLE),
+      arrivalDateTime: DateTime.fromObject({hour: arrivalHour, minute: arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)
     });
   };
   //UPDATE OR EDIT
@@ -125,7 +123,9 @@ class AdminRoutes extends Component{
   }
   editRoute(_id,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare){
     this.setState({
-      editRouteData:{_id,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare}, editRouteModal:! this.state.editRouteModal
+      editRouteData:{_id,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare}, editRouteModal:! this.state.editRouteModal,
+      departureDateTime: DateTime.fromObject({hour: departureHour, minute: departureMinute}).toLocaleString(DateTime.TIME_SIMPLE),
+      arrivalDateTime: DateTime.fromObject({hour: arrivalHour, minute: arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)
     });
   }
   //DELETE Route
@@ -141,7 +141,23 @@ class AdminRoutes extends Component{
       })
     })
   }
-  
+
+resetAddForm() {
+    this.setState({
+        newRouteData:{
+          name:'',
+          status:'On Time',
+          day:0,
+          departureHour:'',
+          departureMinute:'',
+          arrivalHour:'',
+          arrivalMinute:'',
+          fare:''
+        },
+        departureDateTime: '',
+        arrivalDateTime: ''
+    })
+}
   
   render(){
     let routes=this.state.routes.map((route)=>{
@@ -188,67 +204,68 @@ class AdminRoutes extends Component{
             }}/>
           </FormGroup>
           <FormGroup>
-            <Label for="day">day</Label>
-            <Input id="day" value={this.state.newRouteData.day} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.day=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
+            <Label for="day">Day</Label>
+            <br />
+            <select id="day" value={this.state.newRouteData.day} onChange={(e)=> {
+                let {newRouteData}=this.state;
+                newRouteData.day=e.target.value;
+                this.setState({newRouteData});
+                console.log(newRouteData.day);
+            }}>
+                <option value={0}>Sunday</option>
+                <option value={1}>Monday</option>
+                <option value={2}>Tuesday</option>
+                <option value={3}>Wednesday</option>
+                <option value={4}>Thursday</option>
+                <option value={5}>Friday</option>
+                <option value={6}>Saturday</option>
+            </select>
+          </FormGroup> 
           <FormGroup>
              <Label for="departure">Departure</Label>
              <br/>
               <TimePicker
                 id="departure"
                   onChange={(e) => {
-                      let {dateTime}=this.state;
+                      let {departureDateTime}=this.state;
                       let {newRouteData}=this.state;
                       let [hours, minutes] = [0,0];
-                      dateTime = e;
+                      departureDateTime = e;
                       try{
                           [hours, minutes] = e.split(':');
                       } catch (err) {
                           [hours, minutes] = [0,0];
                       }
-                      this.setState({dateTime});
+                      this.setState({departureDateTime});
                       newRouteData.departureHour=hours;
                       newRouteData.departureMinute=minutes;
                       this.setState({newRouteData});
                   }}
-                  value={this.state.dateTime}
+                  value={this.state.departureDateTime}
               />
           </FormGroup>
           <FormGroup>
-            <Label for="departureHour">DepartureHour</Label>
-            <Input id="departureHour" value={this.state.newRouteData.departureHour} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.departureHour=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="departureMinute">DepartureMinute</Label>
-            <Input id="departureMinute" value={this.state.newRouteData.departureMinute} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.departureMinute=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalHour">ArrivalHour</Label>
-            <Input id="arrivalHour" value={this.state.newRouteData.arrivalHour} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.arrivalHour=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalMinute">ArrivalMinute</Label>
-            <Input id="arrivalMinute" value={this.state.newRouteData.arrivalMinute} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.arrivalMinute=e.target.value;
-              this.setState({newRouteData})
-            }}/>
+             <Label for="arrival">Arrival</Label>
+             <br/>
+              <TimePicker
+                id="arrival"
+                  onChange={(e) => {
+                      let {arrivalDateTime}=this.state;
+                      let {newRouteData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      arrivalDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({arrivalDateTime});
+                      newRouteData.arrivalHour=hours;
+                      newRouteData.arrivalMinute=minutes;
+                      this.setState({newRouteData});
+                  }}
+                  value={this.state.arrivalDateTime}
+              />
           </FormGroup>
           <FormGroup>
             <Label for="fare">Fare</Label>
@@ -290,43 +307,66 @@ class AdminRoutes extends Component{
           </FormGroup>
            <FormGroup>
             <Label for="day">Day</Label>
-            <Input id="day" value={this.state.editRouteData.day} onChange={(e)=>{
-              let {editRouteData}=this.state;
-              editRouteData.day=e.target.value;
-              this.setState({editRouteData})
-            }}/>
+            <br />
+            <select id="day" value={this.state.editRouteData.day} onChange={(e)=> {
+                let {editRouteData}=this.state;
+                editRouteData.day=e.target.value;
+                this.setState({editRouteData});
+            }}>
+                <option value={0}>Sunday</option>
+                <option value={1}>Monday</option>
+                <option value={2}>Tuesday</option>
+                <option value={3}>Wednesday</option>
+                <option value={4}>Thursday</option>
+                <option value={5}>Friday</option>
+                <option value={6}>Saturday</option>
+            </select>
           </FormGroup>
           <FormGroup>
-            <Label for="departureHour">DepartureHour</Label>
-            <Input id="departureHour" value={this.state.editRouteData.departureHour} onChange={(e)=>{
-              let {editRouteData}=this.state;
-              editRouteData.departureHour=e.target.value;
-              this.setState({editRouteData})
-            }}/>
+            <Label for="departure">Departure</Label>
+             <br/>
+              <TimePicker
+                id="departure"
+                  onChange={(e) => {
+                      let {departureDateTime}=this.state;
+                      let {editRouteData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      departureDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({departureDateTime});
+                      editRouteData.departureHour=hours;
+                      editRouteData.departureMinute=minutes;
+                      this.setState({editRouteData});
+                  }}
+                  value={this.state.departureDateTime}
+              />
           </FormGroup>
           <FormGroup>
-            <Label for="departureMinute">DepartureMinute</Label>
-            <Input id="departureMinute" value={this.state.editRouteData.departureMinute} onChange={(e)=>{
-              let {editRouteData}=this.state;
-              editRouteData.departureMinute=e.target.value;
-              this.setState({editRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalHour">ArrivalHour</Label>
-            <Input id="arrivalHour" value={this.state.editRouteData.arrivalHour} onChange={(e)=>{
-              let {editRouteData}=this.state;
-              editRouteData.arrivalHour=e.target.value;
-              this.setState({editRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalMinute">ArrivalMinute</Label>
-            <Input id="arrivalMinute" value={this.state.editRouteData.arrivalMinute} onChange={(e)=>{
-              let {editRouteData}=this.state;
-              editRouteData.arrivalMinute=e.target.value;
-              this.setState({editRouteData})
-            }}/>
+            <Label for="arrival">Arrival</Label>
+             <br/>
+              <TimePicker
+                id="arrival"
+                  onChange={(e) => {
+                      let {arrivalDateTime}=this.state;
+                      let {editRouteData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      arrivalDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({arrivalDateTime});
+                      editRouteData.arrivalHour=hours;
+                      editRouteData.arrivalMinute=minutes;
+                      this.setState({editRouteData});
+                  }}
+                  value={this.state.arrivalDateTime}
+              />
           </FormGroup>
           <FormGroup>
             <Label for="fare">Fare</Label>
@@ -343,7 +383,7 @@ class AdminRoutes extends Component{
           <Button color="secondary" onClick={this.toggleEditRouteModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
-        
+        {/* NEW EXCEPTION */}
         <Modal isOpen={this.state.newExceptionModal} toggle={this.toggleNewExceptionModal.bind(this)}>
         <ModalHeader toggle={this.toggleNewExceptionModal.bind(this)}>Add New Exception</ModalHeader>
         <ModalBody>
@@ -354,7 +394,7 @@ class AdminRoutes extends Component{
               let {newExceptionData}=this.state;
               newExceptionData.name=e.target.value;
               this.setState({newExceptionData})
-            }}/>
+            }} readOnly/>
           </FormGroup>
           <FormGroup>
             <Label for="status">Status</Label>
@@ -370,47 +410,61 @@ class AdminRoutes extends Component{
               let {newExceptionData}=this.state;
               newExceptionData.routeId=e.target.value;
               this.setState({newExceptionData})
-            }}/>
+            }} readOnly/>
           </FormGroup>
           <FormGroup>
-            <Label for="day">day</Label>
-            <Input id="day" value={this.state.newExceptionData.day} onChange={(e)=>{
+            <Label for="day">Day</Label>
+            <Input id="day" value={getWeekDay(this.state.newExceptionData.day)} onChange={(e)=>{
               let {newExceptionData}=this.state;
               newExceptionData.day=e.target.value;
               this.setState({newExceptionData})
-            }}/>
+            }} readOnly />
           </FormGroup>
           <FormGroup>
-            <Label for="departureHour">DepartureHour</Label>
-            <Input id="departureHour" value={this.state.newExceptionData.departureHour} onChange={(e)=>{
-              let {newExceptionData}=this.state;
-              newExceptionData.departureHour=e.target.value;
-              this.setState({newExceptionData})
-            }}/>
+            <Label for="departure">Departure</Label>
+             <br/>
+              <TimePicker
+                id="departure"
+                  onChange={(e) => {
+                      let {departureDateTime}=this.state;
+                      let {newExceptionData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      departureDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({departureDateTime});
+                      newExceptionData.departureHour=hours;
+                      newExceptionData.departureMinute=minutes;
+                      this.setState({newExceptionData});
+                  }}
+                  value={this.state.departureDateTime}
+              />
           </FormGroup>
           <FormGroup>
-            <Label for="departureMinute">DepartureMinute</Label>
-            <Input id="departureMinute" value={this.state.newExceptionData.departureMinute} onChange={(e)=>{
-              let {newExceptionData}=this.state;
-              newExceptionData.departureMinute=e.target.value;
-              this.setState({newExceptionData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalHour">ArrivalHour</Label>
-            <Input id="arrivalHour" value={this.state.newExceptionData.arrivalHour} onChange={(e)=>{
-              let {newExceptionData}=this.state;
-              newExceptionData.arrivalHour=e.target.value;
-              this.setState({newExceptionData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalMinute">ArrivalMinute</Label>
-            <Input id="arrivalMinute" value={this.state.newExceptionData.arrivalMinute} onChange={(e)=>{
-              let {newExceptionData}=this.state;
-              newExceptionData.arrivalMinute=e.target.value;
-              this.setState({newExceptionData})
-            }}/>
+            <Label for="arrival">Arrival</Label>
+             <br/>
+              <TimePicker
+                id="arrival"
+                  onChange={(e) => {
+                      let {arrivalDateTime}=this.state;
+                      let {newExceptionData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      arrivalDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({arrivalDateTime});
+                      newExceptionData.arrivalHour=hours;
+                      newExceptionData.arrivalMinute=minutes;
+                      this.setState({newExceptionData});
+                  }}
+                  value={this.state.arrivalDateTime}
+              />
           </FormGroup>
           <FormGroup>
             <Label for="fare">Fare</Label>
