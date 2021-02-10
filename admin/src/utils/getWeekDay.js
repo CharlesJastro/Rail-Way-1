@@ -14,6 +14,8 @@ export function getWeekDay(day) {
             return 'Friday';
         case 6:
             return 'Saturday';
+        default:
+            return 'N/A';
     }
 
 }

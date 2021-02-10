@@ -4,23 +4,30 @@
   "private": true,
   "proxy": "http://localhost:3001",
   "dependencies": {
+<<<<<<< HEAD
+    "@material-ui/core": "^4.11.3",
     "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
+=======
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.6.3",
+>>>>>>> bdfa41eb0623d856f1441ae38432fcf36909d043
     "axios": "^0.21.1",
-    "cross-spawn": "^6.0.5",
+    "cross-spawn": "^7.0.3",
     "google-maps-react": "^2.0.6",
     "luxon": "^1.25.0",
-    "query-string": "^4.3.4",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
+    "query-string": "^6.13.8",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
     "react-geocode": "^0.2.3",
     "react-places-autocomplete": "^7.3.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.1",
+    "react-scripts": "4.0.2",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^2.0.1",
-    "web-vitals": "^0.2.4"
+    "semantic-ui-react": "^2.0.3",
+    "web-vitals": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

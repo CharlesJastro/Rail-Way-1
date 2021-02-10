@@ -3,6 +3,7 @@ import {Header} from './components/Header';
 import {NavBar} from './components/NavBar';
 import {RoutesList} from './views/RoutesList';
 import {Travel} from './views/Travel';
+import {TravelStations} from './views/Travel';
 import {Favourites} from './views/Favourites';
 import {RouteDetails} from './components/RouteDetails';
 import NotificationField from './components/NotificationField';
@@ -20,6 +21,7 @@ export const Routes = () => {
                 <Redirect to="/" />
             </Route>
             <Route exact path="/travel" component={Travel} />
+            <Route exact path="/travelstations" component={TravelStations} />
             <Route exact path="/favourites" component={Favourites} />
             <Route path="/route/:name" component={RouteDetails}/>
         </Switch>
