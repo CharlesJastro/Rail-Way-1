@@ -132,7 +132,7 @@ async function getRoutes(req, res, next) {
     }
     if (exceptions.length > 0) {
         //routes = exceptions;
-        routes = routes.map((route) => exceptions.find((exception) => exception.id == route._id.toString()) || route);
+        routes = routes.map((route) => exceptions.find((exception) => exception.routeId == route._id.toString()) || route);
     }
     // Get current server time
     let time = DateTime.local().setZone(TIMEZONE);
