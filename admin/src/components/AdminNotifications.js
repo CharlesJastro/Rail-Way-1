@@ -1,6 +1,8 @@
 import React,{Component}from 'react';
 import axios from 'axios';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
+import {FaTrashAlt} from 'react-icons/fa';
+import {FaPencilAlt} from 'react-icons/fa';
 class AdminNotifications extends Component{
   state={
     notifications:[],
@@ -93,8 +95,8 @@ class AdminNotifications extends Component{
               <td>{notification.message}</td>
               
               <td>
- <Button color="success" size="sm" className="mr-2" onClick={this.editNotification.bind(this, notification._id,notification.title,notification.urgency,notification.message)}>Edit</Button>
-                <Button color="danger" size="sm" onClick={this.deleteNotification.bind(this, notification._id)}>Delete</Button>
+ <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editNotification.bind(this, notification._id,notification.title,notification.urgency,notification.message)} dataToggle="tooltip" dataPlacement="top" title="Edit the exceptions"><FaPencilAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteNotification.bind(this, notification._id)} dataToggle="tooltip" dataPlacement="top" title="Are you sure you want to delete this items?"><FaTrashAlt/></Button>
               </td>
             </tr>
       )

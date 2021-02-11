@@ -1,6 +1,9 @@
 import React,{Component}from 'react';
 import axios from 'axios';
+//import Tippy from '@tippyjs/react';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
+import {FaTrashAlt} from 'react-icons/fa';
+import {FaPencilAlt} from 'react-icons/fa';
 class AdminExceptions extends Component{
   state={
     exceptions:[],
@@ -120,8 +123,20 @@ class AdminExceptions extends Component{
               <td>{exception.arrivalMinute}</td>
               <td>{exception.fare}</td>
               <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editException.bind(this, exception._id,exception.routeId,exception.name,  exception.status, exception.day, exception.departureHour, exception.departureMinute, exception.arrivalHour,exception.arrivalMinute, exception.fare)}>Edit</Button>
-                <Button color="danger" size="sm" onClick={this.deleteException.bind(this, exception._id)}>Delete</Button>
+                
+                {/* <Button color="success" size="sm" className="mr-2" onClick={this.editException.bind(this, exception._id,exception.routeId,exception.name,  exception.status, exception.day, exception.departureHour, exception.departureMinute, exception.arrivalHour,exception.arrivalMinute, exception.fare)}>Edit</Button> */}
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editException.bind(this, exception._id,exception.routeId,exception.name,  exception.status, exception.day, exception.departureHour, exception.departureMinute, exception.arrivalHour,exception.arrivalMinute, exception.fare)} dataToggle="tooltip" dataPlacement="top" title="Edit the exceptions">
+                  <FaPencilAlt/>
+                </Button>
+                
+                {/* <Button color="danger" size="sm" onClick={this.deleteException.bind(this, exception._id)}>Delete</Button> */}
+                {/* <span className="inline" tabIndex="0" dataToggle="tooltip" title="Are you sure you want to delete?">
+  <Button color="danger" size="sm" onClick={this.deleteException.bind(this, exception._id)}  style={{pointerEvents:"none"}} disabled>Disabled button</Button>
+</span> */}
+<Button color="btn btn-outline-danger" size="sm" onClick={this.deleteException.bind(this, exception._id)} dataToggle="tooltip" dataPlacement="top" title="Are you sure you want to delete this items?">
+                <FaTrashAlt/>
+                </Button>
+                
               </td>
             </tr>
       )
