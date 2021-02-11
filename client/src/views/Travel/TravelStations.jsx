@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
 
 
 class TravelStations extends Component {
@@ -7,12 +7,18 @@ class TravelStations extends Component {
   render() {
     return (
       <div>
-         <h3>Travel View</h3>
-         <Button variant="contained">My Favourites</Button>
+         <h3>Travel View</h3> 
+        
+      <Button variant="contained">My Favourites</Button>
+    
          <Button variant="contained">From Map</Button> <hr/> <br/><br/><br/>
-         <p>Abuja (Idu)</p>
-         <p>Abuja (Kubwa)</p>
-         <p>Kaduna (Rigasa)</p>
+         <h3>Travel View</h3>
+         <Button onClick={()=>window.location.href = "./travelstations" }> Abuja (Idu)   </Button> <hr/>
+         <Button>ABUJA (Kubwa)       </Button> <hr/>
+         <Button>Kaduna (Rigasa)     </Button> <hr/> <br/><br/><br/>
+         
+         
+         
          {/* 
          <Button color="primary">To:    Station</Button> <hr/>
          <Button color="secondary">Depart At:    Now</Button> <hr/>
