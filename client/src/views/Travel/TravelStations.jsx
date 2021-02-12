@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+//import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 
@@ -8,7 +9,7 @@ class TravelStations extends Component {
     return (
       <div>
          <h3>Travel View</h3>
-         <Button variant="contained">My Favourites</Button>
+         <Button variant="contained" >My Favourites</Button>
          <Button variant="contained">From Map</Button> <hr/> <br/><br/><br/>
          <p>Abuja (Idu)</p>
          <p>Abuja (Kubwa)</p>
