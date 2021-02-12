@@ -4,6 +4,9 @@ import {DateTime} from 'luxon';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
 import {getWeekDay} from '../utils/getWeekDay.js';
 import TimePicker from 'react-time-picker';
+import {FaTrashAlt} from 'react-icons/fa';
+import {FaPencilAlt} from 'react-icons/fa';
+import {FcAddRow} from 'react-icons/fc'
 class AdminRoutes extends Component{
   state={
     routes:[],
@@ -170,9 +173,9 @@ resetAddForm() {
               <td>{DateTime.fromObject({hour: route.arrivalHour, minute: route.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
               <td>{route.fare}</td>
               <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editRoute.bind(this, route._id,route.name,  route.status, route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)}>Edit</Button>
-                <Button color="success" size="sm" className="mr-2" onClick={this.createException.bind(this, route._id,route.name, "Disruption", route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)}>Add Exception</Button>
-                <Button color="danger" size="sm" onClick={this.deleteRoute.bind(this, route._id)}>Delete</Button>
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editRoute.bind(this, route._id,route.name,  route.status, route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)} dataToggle="tooltip" dataPlacement="top" title="Edit the route items"><FaPencilAlt/></Button>
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.createException.bind(this, route._id,route.name, "Disruption", route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)} dataToggle="tooltip" dataPlacement="top" title="Add Exceptions"><FcAddRow/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteRoute.bind(this, route._id)} dataToggle="tooltip" dataPlacement="top" title="Are you sure you want to delete this items?"><FaTrashAlt/></Button>
               </td>
             </tr>
       )

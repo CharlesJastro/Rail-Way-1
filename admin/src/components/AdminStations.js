@@ -2,6 +2,8 @@ import React,{Component}from 'react';
 import axios from 'axios';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
 //import { getWeekDay } from '../utils/getWeekDay';
+import {FaTrashAlt} from 'react-icons/fa';
+import {FaPencilAlt} from 'react-icons/fa';
 
 class AdminStations extends Component{
   state={
@@ -132,8 +134,8 @@ class AdminStations extends Component{
               <td>{station.fare}</td>
               
               <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editStation.bind(this, station._id,station.name, station.code,station.day,station.startingStation, station.endingStation, station.departureHour, station.departureMinute, station.arrivalHour,station.arrivalMinute, station.fare)}>Edit</Button>
-                <Button color="danger" size="sm" onClick={this.deleteStation.bind(this, station._id)}>Delete</Button>
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editStation.bind(this, station._id,station.name, station.code,station.day,station.startingStation, station.endingStation, station.departureHour, station.departureMinute, station.arrivalHour,station.arrivalMinute, station.fare)} dataToggle="tooltip" dataPlacement="top" title="Edit the route items"><FaPencilAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteStation.bind(this, station._id)} dataToggle="tooltip" dataPlacement="top" title="Are you sure you want to delete this items?"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
