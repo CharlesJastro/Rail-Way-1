@@ -12,6 +12,10 @@ router.get('/', async(req,res)=>{
         res.status(500).json({message: err.message})
     }
 })
+// Get list of stations
+router.get('/list', getList, (req,res)=> {
+    res.json(res.stations)
+});
 //GET BY DAY WITH ID
 router.get('/day/:id', getStations, (req,res)=>{
     res.json(res.stations);
@@ -106,6 +110,25 @@ async function getStations(req,res,next){
         return res.status(500).json({message:err.message})
     }
     res.stations=stations
+    next()
+}
+
+async function getList(req,res,next){
+    let stations
+    let stationList
+    let stationList2
+    try{
+        stations=await Stations.find()
+        stationList = stations.map((item, index) => item.startingStation);
+        stationList2 = stations.map((item, index) => item.endingStation);
+        stationList = stationList.concat(stationList2);
+        stationList = stationList.filter((value, index, self) => (
+            self.indexOf(value) === index
+        ));
+    }catch(err){
+        res.status(500).json({message: err.message})
+    }
+    res.stations=stationList
     next()
 }
 
