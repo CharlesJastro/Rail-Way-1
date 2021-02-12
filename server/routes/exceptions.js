@@ -71,7 +71,16 @@ router.patch('/:id', getException, async(req,res)=>{
         res.status(400).json({message : err.message});
     }
 });
-// Delete exception
+// Delete All Exceptions
+router.delete('/all', async(req, res) => {
+    try {
+        await Exceptions.deleteMany({});
+        res.json({message: "Deleted All Exceptions"});
+    } catch (error) {
+        res.status(500).json({message:err.message});
+    }
+});
+// Delete exception by id
 router.delete('/:id', getException, async(req, res) => {
     try {
         await res.exception.remove();

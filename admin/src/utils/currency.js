@@ -1,0 +1,1 @@
+export const currencySymbol = '\u20A6';

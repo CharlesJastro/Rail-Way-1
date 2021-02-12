@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import AdminExceptions from "./components/AdminExceptions";
 import AdminNotifications from "./components/AdminNotifications";
 import AdminRoutes from "./components/AdminRoutes";
@@ -26,6 +27,21 @@ function App(){
         <NotFound/>
       </Route>
       </Switch>
+=======
+import React from 'react';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {Routes} from './routes';
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+
+function App(){
+  return(
+    <div>
+        <Router>
+            <Routes/>
+        </Router>
+>>>>>>> 401503e3e4cf439918f0322c992b1c7da1399e73
     </div>
     </Router>
   );

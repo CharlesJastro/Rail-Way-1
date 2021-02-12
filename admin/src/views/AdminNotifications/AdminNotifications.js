@@ -1,17 +1,16 @@
 import React,{Component}from 'react';
 import axios from 'axios';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
+import {getUrgency} from '../../utils/getUrgency.js';
 import {FaTrashAlt} from 'react-icons/fa';
 import {FaPencilAlt} from 'react-icons/fa';
 class AdminNotifications extends Component{
   state={
     notifications:[],
-    newNotificationData:{
-      
+    newNotificationData:{ 
       title:'',
       urgency:'',
-      message:''
-      
+      message:'' 
     },
     editNotificationData:{
       _id:'',
@@ -91,12 +90,11 @@ class AdminNotifications extends Component{
       return(
         <tr key={notification._id}>
               <td>{notification.title}</td>
-              <td>{notification.urgency}</td>
+              <td>{getUrgency(notification.urgency)}</td>
               <td>{notification.message}</td>
-              
               <td>
- <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editNotification.bind(this, notification._id,notification.title,notification.urgency,notification.message)} dataToggle="tooltip" dataPlacement="top" title="Edit the exceptions"><FaPencilAlt/></Button>
-                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteNotification.bind(this, notification._id)} dataToggle="tooltip" dataPlacement="top" title="Are you sure you want to delete this items?"><FaTrashAlt/></Button>
+                 <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editNotification.bind(this, notification._id,notification.title,notification.urgency,notification.message)} datatoggle="tooltip" dataplacement="top" title="Edit Notification"><FaPencilAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteNotification.bind(this, notification._id)} datatoggle="tooltip" dataplacement="top" title="Delete Notification"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
@@ -121,11 +119,15 @@ class AdminNotifications extends Component{
           </FormGroup>
           <FormGroup>
             <Label for="urgency">Urgency</Label>
-            <Input id="urgency" value={this.state.newNotificationData.urgency} onChange={(e)=>{
-              let {newNotificationData}=this.state;
-              newNotificationData.urgency=e.target.value;
-              this.setState({newNotificationData})
-            }}/>
+            <br />
+            <select id="urgency" value={this.state.newNotificationData.urgency} onChange={(e)=> {
+                let {newNotificationData}=this.state;
+                newNotificationData.urgency=e.target.value;
+                this.setState({newNotificationData});
+            }}>
+                <option value='info'>Informational</option>
+                <option value='alert'>Alert</option>
+            </select>
           </FormGroup>
           <FormGroup>
             <Label for="message">Message</Label>
@@ -161,11 +163,15 @@ class AdminNotifications extends Component{
           </FormGroup>
           <FormGroup>
             <Label for="urgency">Urgency</Label>
-            <Input id="urgency" value={this.state.editNotificationData.status} onChange={(e)=>{
-              let {editNotificationData}=this.state;
-              editNotificationData.urgency=e.target.value;
-              this.setState({editNotificationData})
-            }}/>
+            <br />
+            <select id="urgency" value={this.state.editNotificationData.urgency} onChange={(e)=> {
+                let {editNotificationData}=this.state;
+                editNotificationData.urgency=e.target.value;
+                this.setState({editNotificationData});
+            }}>
+                <option value='info'>Informational</option>
+                <option value='alert'>Alert</option>
+            </select>
           </FormGroup>
            <FormGroup>
             <Label for="message">Message</Label>
@@ -187,12 +193,9 @@ class AdminNotifications extends Component{
         <Table>
           <thead>
             <tr>
-              <th>Route ID</th>
               <th>Title</th>
               <th>Urgency</th>
               <th>Message</th>
-            
-
             </tr>
           </thead>
           <tbody>
