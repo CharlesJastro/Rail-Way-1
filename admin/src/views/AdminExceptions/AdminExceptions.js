@@ -224,7 +224,7 @@ deleteAllExceptions() {
               </ModalBody>
               <ModalFooter style={{justifyContent:'space-between'}}>
                   <Button color="danger" onClick={this.deleteException.bind(this, this.state.deleteExceptionID)}>Yes, Delete</Button>{' '}
-                  <Button color="primary" onClick={this.toggleEditExceptionModal.bind(this)}>No</Button>
+                  <Button color="primary" onClick={this.toggleDeleteExceptionModal.bind(this)}>No</Button>
               </ModalFooter>
         </Modal>
 

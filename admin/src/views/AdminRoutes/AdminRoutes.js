@@ -48,7 +48,9 @@ class AdminRoutes extends Component{
     },
     newRouteModal:false,
     editRouteModal:false,
-    newExceptionModal:false
+    newExceptionModal:false,
+    deleteRouteModal: false,
+    deleteRouteID: 0
   }
   //GET THE DATA FROM API
   componentDidMount(){
@@ -70,6 +72,11 @@ class AdminRoutes extends Component{
   toggleNewExceptionModal(){
     this.setState({
       newExceptionModal: !this.state.newExceptionModal
+    })
+  }
+  toggleDeleteRouteModal(){
+    this.setState({
+      deleteRouteModal: !this.state.deleteRouteModal
     })
   }
   // ADD/POST REQUEST
@@ -133,11 +140,23 @@ class AdminRoutes extends Component{
       arrivalDateTime: `${arrivalHour}:${arrivalMinute}`
     });
   }
+  deleteRouteSetup(_id) { 
+      this.setState({
+          deleteRouteModal: !this.state.deleteRouteModal,
+          deleteRouteID: _id
+      })
+  }
   //DELETE Route
   deleteRoute(_id){
   axios.delete('/routes/' + _id).then((response)=>{
       this._refreshRoutes();
     })
+  if (this.state.deleteRouteModal) {
+      this.setState({
+          deleteRouteModal: !this.state.deleteRouteModal,
+          deleteRouteID: 0
+      })
+  }
   }
   _refreshRoutes(){
     axios.get('/routes').then((response)=>{
@@ -177,7 +196,7 @@ resetAddForm() {
               <td>
                 <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editRoute.bind(this, route._id,route.name,  route.status, route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)} datatoggle="tooltip" dataplacement="top" title="Edit Route"><FaPencilAlt/></Button>
                 <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.createException.bind(this, route._id,route.name, "Disruption", route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)} datatoggle="tooltip" dataplacement="top" title="Add Exception To Route"><FcAddRow/></Button>
-                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteRoute.bind(this, route._id)} datatoggle="tooltip" dataplacement="top" title="Delete Route"><FaTrashAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteRouteSetup.bind(this, route._id)} datatoggle="tooltip" dataplacement="top" title="Delete Route"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
@@ -477,6 +496,19 @@ resetAddForm() {
           <Button color="secondary" onClick={this.toggleNewExceptionModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
+        
+        <Modal isOpen={this.state.deleteRouteModal} toggle={this.toggleDeleteRouteModal.bind(this)}>
+              <ModalHeader>
+                  Warning: Delete Irreversible
+              </ModalHeader>
+              <ModalBody>
+                  Are you sure you wish to delete this route?
+              </ModalBody>
+              <ModalFooter style={{justifyContent:'space-between'}}>
+                  <Button color="danger" onClick={this.deleteRoute.bind(this, this.state.deleteRouteID)}>Yes, Delete</Button>{' '}
+                  <Button color="primary" onClick={this.toggleDeleteRouteModal.bind(this)}>No</Button>
+              </ModalFooter>
+        </Modal>
 
         <Table>
           <thead>

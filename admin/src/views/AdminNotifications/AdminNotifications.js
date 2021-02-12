@@ -19,7 +19,9 @@ class AdminNotifications extends Component{
       message:''
     },
     newNotificationModal:false,
-    editNotificationModal:false
+    editNotificationModal:false,
+    deleteNotificationModal: false,
+    deleteNotificationID: 0
   }
   //GET THE DATA FROM API
   componentDidMount(){
@@ -33,6 +35,11 @@ class AdminNotifications extends Component{
   toggleEditNotificationModal(){
     this.setState({
       editNotificationModal: !this.state.editNotificationModal
+    })
+  }
+  toggleDeleteNotificationModal() {
+      this.setState({
+      deleteNotificationModal: !this.state.deleteNotificationModal
     })
   }
   // ADD/POST REQUEST
@@ -70,11 +77,23 @@ class AdminNotifications extends Component{
       editNotificationData:{_id,title, urgency, message}, editNotificationModal:! this.state.editNotificationModal
     });
   }
+  deleteNotificationSetup(_id) { 
+      this.setState({
+          deleteNotificationModal: !this.state.deleteNotificationModal,
+          deleteNotificationID: _id
+      })
+  }
   //DELETE Notification
   deleteNotification(_id){
   axios.delete('/notifications/' + _id).then((response)=>{
       this._refreshNotifications();
     })
+  if (this.state.deleteNotificationModal) {
+      this.setState({
+          deleteNotificationModal: !this.state.deleteNotificationModal,
+          deleteNotificationID: 0
+      })
+  }
   }
   _refreshNotifications(){
     axios.get('/notifications').then((response)=>{
@@ -94,7 +113,7 @@ class AdminNotifications extends Component{
               <td>{notification.message}</td>
               <td>
                  <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editNotification.bind(this, notification._id,notification.title,notification.urgency,notification.message)} datatoggle="tooltip" dataplacement="top" title="Edit Notification"><FaPencilAlt/></Button>
-                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteNotification.bind(this, notification._id)} datatoggle="tooltip" dataplacement="top" title="Delete Notification"><FaTrashAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteNotificationSetup.bind(this, notification._id)} datatoggle="tooltip" dataplacement="top" title="Delete Notification"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
@@ -189,6 +208,19 @@ class AdminNotifications extends Component{
           <Button color="secondary" onClick={this.toggleEditNotificationModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
+        
+        <Modal isOpen={this.state.deleteNotificationModal} toggle={this.toggleDeleteNotificationModal.bind(this)}>
+              <ModalHeader>
+                  Warning: Delete Irreversible
+              </ModalHeader>
+              <ModalBody>
+                  Are you sure you wish to delete this route?
+              </ModalBody>
+              <ModalFooter style={{justifyContent:'space-between'}}>
+                  <Button color="danger" onClick={this.deleteNotification.bind(this, this.state.deleteNotificationID)}>Yes, Delete</Button>{' '}
+                  <Button color="primary" onClick={this.toggleDeleteNotificationModal.bind(this)}>No</Button>
+              </ModalFooter>
+        </Modal>
 
         <Table>
           <thead>

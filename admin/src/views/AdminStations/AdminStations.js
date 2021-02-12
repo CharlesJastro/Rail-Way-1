@@ -41,7 +41,9 @@ class AdminStations extends Component{
      
     },
     newStationModal:false,
-    editStationModal:false
+    editStationModal:false,
+    deleteStationModal: false,
+    deleteStationID: 0
   }
   //GET THE DATA FROM API
   componentDidMount(){
@@ -58,6 +60,11 @@ class AdminStations extends Component{
   toggleEditStationModal(){
     this.setState({
       editStationModal: !this.state.editStationModal
+    })
+  }
+  toggleDeleteStationModal(){
+    this.setState({
+      deleteStationModal: !this.state.deleteStationModal
     })
   }
   // ADD/POST REQUEST
@@ -117,11 +124,23 @@ class AdminStations extends Component{
         arrivalDateTime: `${arrivalHour}:${arrivalMinute}`
     });
   }
+  deleteStationSetup(_id) { 
+      this.setState({
+          deleteStationModal: !this.state.deleteStationModal,
+          deleteStationID: _id
+      })
+  }
   //DELETE Station
   deleteStation(_id){
   axios.delete('/stations/' + _id).then((response)=>{
       this._refreshstations();
     })
+  if (this.state.deleteStationModal) {
+      this.setState({
+          deleteStationModal: !this.state.deleteStationModal,
+          deleteStationID: 0
+      })
+  }
   }
   _refreshstations(){
     axios.get('/stations').then((response)=>{
@@ -165,7 +184,7 @@ resetAddForm() {
               
               <td>
                 <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editStation.bind(this, station._id,station.name, station.code,station.day,station.startingStation, station.endingStation, station.departureHour, station.departureMinute, station.arrivalHour,station.arrivalMinute, station.fare)} datatoggle="tooltip" dataplacement="top" title="Edit Station"><FaPencilAlt/></Button>
-                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteStation.bind(this, station._id)} datatoggle="tooltip" dataplacement="top" title="Delete Station"><FaTrashAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteStationSetup.bind(this, station._id)} datatoggle="tooltip" dataplacement="top" title="Delete Station"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
@@ -410,6 +429,19 @@ resetAddForm() {
           <Button color="secondary" onClick={this.toggleEditStationModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
+        
+        <Modal isOpen={this.state.deleteStationModal} toggle={this.toggleDeleteStationModal.bind(this)}>
+              <ModalHeader>
+                  Warning: Delete Irreversible
+              </ModalHeader>
+              <ModalBody>
+                  Are you sure you wish to delete this station?
+              </ModalBody>
+              <ModalFooter style={{justifyContent:'space-between'}}>
+                  <Button color="danger" onClick={this.deleteStation.bind(this, this.state.deleteStationID)}>Yes, Delete</Button>{' '}
+                  <Button color="primary" onClick={this.toggleDeleteStationModal.bind(this)}>No</Button>
+              </ModalFooter>
+        </Modal>
 
         <Table>
           <thead>
