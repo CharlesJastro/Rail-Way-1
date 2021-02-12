@@ -30,6 +30,8 @@ const notifRouter = require('./routes/notifications.js');
 const exceptionsRouter = require('./routes/exceptions.js');
 //Router for STATIONS
 const stationsRouter=require('./routes/stations')
+//Router Admin login
+const adminsRouter=require('./routes/adminsLogin')
 //Use station router
 app.use('/stations', stationsRouter)
 
@@ -38,6 +40,8 @@ app.use('/routes',routeRouter)
 app.use('/notifications', notifRouter);
 // Use exceptions router
 app.use('/exceptions', exceptionsRouter);
+//use admin router
+app.use('/admins',adminsRouter)
 
 
 

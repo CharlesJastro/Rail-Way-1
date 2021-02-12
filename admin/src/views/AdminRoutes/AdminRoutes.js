@@ -2,8 +2,13 @@ import React,{Component}from 'react';
 import axios from 'axios';
 import {DateTime} from 'luxon';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
-import {getWeekDay} from '../utils/getWeekDay.js';
+import {getWeekDay} from '../../utils/getWeekDay.js';
 import TimePicker from 'react-time-picker';
+import {FaTrashAlt} from 'react-icons/fa';
+import {FaPencilAlt} from 'react-icons/fa';
+import {FcAddRow} from 'react-icons/fc'
+import {currencySymbol} from '../../utils/currency';
+
 class AdminRoutes extends Component{
   state={
     routes:[],
@@ -43,7 +48,9 @@ class AdminRoutes extends Component{
     },
     newRouteModal:false,
     editRouteModal:false,
-    newExceptionModal:false
+    newExceptionModal:false,
+    deleteRouteModal: false,
+    deleteRouteID: 0
   }
   //GET THE DATA FROM API
   componentDidMount(){
@@ -65,6 +72,11 @@ class AdminRoutes extends Component{
   toggleNewExceptionModal(){
     this.setState({
       newExceptionModal: !this.state.newExceptionModal
+    })
+  }
+  toggleDeleteRouteModal(){
+    this.setState({
+      deleteRouteModal: !this.state.deleteRouteModal
     })
   }
   // ADD/POST REQUEST
@@ -94,8 +106,8 @@ class AdminRoutes extends Component{
   createException(routeId,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare){
       this.setState({
       newExceptionData:{routeId,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare}, newExceptionModal:! this.state.newExceptionModal,
-      departureDateTime: DateTime.fromObject({hour: departureHour, minute: departureMinute}).toLocaleString(DateTime.TIME_SIMPLE),
-      arrivalDateTime: DateTime.fromObject({hour: arrivalHour, minute: arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)
+      departureDateTime: `${departureHour}:${departureMinute}`,
+      arrivalDateTime: `${arrivalHour}:${arrivalMinute}`
     });
   };
   //UPDATE OR EDIT
@@ -124,15 +136,27 @@ class AdminRoutes extends Component{
   editRoute(_id,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare){
     this.setState({
       editRouteData:{_id,name,status,day,departureHour,departureMinute,arrivalHour,arrivalMinute,fare}, editRouteModal:! this.state.editRouteModal,
-      departureDateTime: DateTime.fromObject({hour: departureHour, minute: departureMinute}).toLocaleString(DateTime.TIME_SIMPLE),
-      arrivalDateTime: DateTime.fromObject({hour: arrivalHour, minute: arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)
+      departureDateTime: `${departureHour}:${departureMinute}`,
+      arrivalDateTime: `${arrivalHour}:${arrivalMinute}`
     });
+  }
+  deleteRouteSetup(_id) { 
+      this.setState({
+          deleteRouteModal: !this.state.deleteRouteModal,
+          deleteRouteID: _id
+      })
   }
   //DELETE Route
   deleteRoute(_id){
   axios.delete('/routes/' + _id).then((response)=>{
       this._refreshRoutes();
     })
+  if (this.state.deleteRouteModal) {
+      this.setState({
+          deleteRouteModal: !this.state.deleteRouteModal,
+          deleteRouteID: 0
+      })
+  }
   }
   _refreshRoutes(){
     axios.get('/routes').then((response)=>{
@@ -168,11 +192,11 @@ resetAddForm() {
               <td>{getWeekDay(route.day)}</td>
               <td>{DateTime.fromObject({hour: route.departureHour, minute: route.departureMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
               <td>{DateTime.fromObject({hour: route.arrivalHour, minute: route.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
-              <td>{route.fare}</td>
+              <td>{currencySymbol}{route.fare}</td>
               <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editRoute.bind(this, route._id,route.name,  route.status, route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)}>Edit</Button>
-                <Button color="success" size="sm" className="mr-2" onClick={this.createException.bind(this, route._id,route.name, "Disruption", route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)}>Add Exception</Button>
-                <Button color="danger" size="sm" onClick={this.deleteRoute.bind(this, route._id)}>Delete</Button>
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editRoute.bind(this, route._id,route.name,  route.status, route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)} datatoggle="tooltip" dataplacement="top" title="Edit Route"><FaPencilAlt/></Button>
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.createException.bind(this, route._id,route.name, "Disruption", route.day, route.departureHour, route.departureMinute, route.arrivalHour,route.arrivalMinute, route.fare)} datatoggle="tooltip" dataplacement="top" title="Add Exception To Route"><FcAddRow/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteRouteSetup.bind(this, route._id)} datatoggle="tooltip" dataplacement="top" title="Delete Route"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
@@ -210,7 +234,6 @@ resetAddForm() {
                 let {newRouteData}=this.state;
                 newRouteData.day=e.target.value;
                 this.setState({newRouteData});
-                console.log(newRouteData.day);
             }}>
                 <option value={0}>Sunday</option>
                 <option value={1}>Monday</option>
@@ -405,14 +428,6 @@ resetAddForm() {
             }}/>
           </FormGroup>
           <FormGroup>
-            <Label for="routeId">RouteID</Label>
-            <Input id="routeId" value={this.state.newExceptionData.routeId} onChange={(e)=>{
-              let {newExceptionData}=this.state;
-              newExceptionData.routeId=e.target.value;
-              this.setState({newExceptionData})
-            }} readOnly/>
-          </FormGroup>
-          <FormGroup>
             <Label for="day">Day</Label>
             <Input id="day" value={getWeekDay(this.state.newExceptionData.day)} onChange={(e)=>{
               let {newExceptionData}=this.state;
@@ -481,6 +496,19 @@ resetAddForm() {
           <Button color="secondary" onClick={this.toggleNewExceptionModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
+        
+        <Modal isOpen={this.state.deleteRouteModal} toggle={this.toggleDeleteRouteModal.bind(this)}>
+              <ModalHeader>
+                  Warning: Delete Irreversible
+              </ModalHeader>
+              <ModalBody>
+                  Are you sure you wish to delete this route?
+              </ModalBody>
+              <ModalFooter style={{justifyContent:'space-between'}}>
+                  <Button color="danger" onClick={this.deleteRoute.bind(this, this.state.deleteRouteID)}>Yes, Delete</Button>{' '}
+                  <Button color="primary" onClick={this.toggleDeleteRouteModal.bind(this)}>No</Button>
+              </ModalFooter>
+        </Modal>
 
         <Table>
           <thead>

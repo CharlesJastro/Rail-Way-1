@@ -1,16 +1,17 @@
-import AdminExceptions from "./components/AdminExceptions";
-import AdminNotifications from "./components/AdminNotifications";
-import AdminRoutes from "./components/AdminRoutes";
-import AdminStations from "./components/AdminStations";
+import React from 'react';
+import {BrowserRouter as Router} from 'react-router-dom';
+import {Routes} from './routes';
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
 
 function App(){
   return(
-    <div className="ui container">
-      <AdminNotifications/>
-      <AdminRoutes/>
-      <AdminExceptions/>  
-      <AdminStations/>
+    <div>
+        <Router>
+            <Routes/>
+        </Router>
     </div>
-  )
+  );
 }
 export default App;

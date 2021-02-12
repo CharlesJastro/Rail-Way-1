@@ -1,15 +1,22 @@
 import React,{Component}from 'react';
 import axios from 'axios';
+import {DateTime} from 'luxon';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
-//import { getWeekDay } from '../utils/getWeekDay';
+import { getWeekDay } from '../../utils/getWeekDay';
+import TimePicker from 'react-time-picker';
+import {FaTrashAlt} from 'react-icons/fa';
+import {FaPencilAlt} from 'react-icons/fa';
+import {currencySymbol} from '../../utils/currency';
 
 class AdminStations extends Component{
   state={
     stations:[],
+    departureDateTime: '',
+    arrivalDateTime: '',
     newStationData:{
       name:'',
       code:'',
-      day:'',
+      day:0,
       startingStation:'',
       endingStation:'',
       departureHour:'',
@@ -34,7 +41,9 @@ class AdminStations extends Component{
      
     },
     newStationModal:false,
-    editStationModal:false
+    editStationModal:false,
+    deleteStationModal: false,
+    deleteStationID: 0
   }
   //GET THE DATA FROM API
   componentDidMount(){
@@ -43,11 +52,19 @@ class AdminStations extends Component{
   toggleNewStationModal(){
     this.setState({
       newStationModal: !this.state.newStationModal
-    })
+    });
+    if (!this.state.newRouteModel) {
+        this.resetAddForm();
+    }
   }
   toggleEditStationModal(){
     this.setState({
       editStationModal: !this.state.editStationModal
+    })
+  }
+  toggleDeleteStationModal(){
+    this.setState({
+      deleteStationModal: !this.state.deleteStationModal
     })
   }
   // ADD/POST REQUEST
@@ -56,18 +73,20 @@ class AdminStations extends Component{
       let{ stations } = this.state;
       stations.push(response.data);
       this.setState({stations, newStationModal:false, newStationData:{
-       name:'',
+      name:'',
       code:'',
-      day:'',
+      day:0,
       startingStation:'',
       endingStation:'',
       departureHour:'',
       departureMinute:'',
       arrivalHour:'',
       arrivalMinute:'',
-      fare:'',
-      
-    }})
+      fare:'',      
+    },
+    departureDateTime: '',
+    arrivalDateTime: ''
+    })
     });
   }
   //UPDATE OR EDIT
@@ -91,21 +110,37 @@ class AdminStations extends Component{
       arrivalMinute:'',
       fare:'',
       
-        }
+        },
+      departureDateTime: '',
+      arrivalDateTime: ''
       })
      
     })
   }
   editStation(_id,name,code, day, startingStation, endingStation, departureHour, departureMinute,arrivalHour,arrivalMinute,fare){
     this.setState({
-      editStationData:{_id,name,code, day, startingStation, endingStation, departureHour, departureMinute,arrivalHour,arrivalMinute,fare}, editStationModal:! this.state.editStationModal
+      editStationData:{_id,name,code, day, startingStation, endingStation, departureHour, departureMinute,arrivalHour,arrivalMinute,fare}, editStationModal:! this.state.editStationModal,
+        departureDateTime: `${departureHour}:${departureMinute}`,
+        arrivalDateTime: `${arrivalHour}:${arrivalMinute}`
     });
+  }
+  deleteStationSetup(_id) { 
+      this.setState({
+          deleteStationModal: !this.state.deleteStationModal,
+          deleteStationID: _id
+      })
   }
   //DELETE Station
   deleteStation(_id){
   axios.delete('/stations/' + _id).then((response)=>{
       this._refreshstations();
     })
+  if (this.state.deleteStationModal) {
+      this.setState({
+          deleteStationModal: !this.state.deleteStationModal,
+          deleteStationID: 0
+      })
+  }
   }
   _refreshstations(){
     axios.get('/stations').then((response)=>{
@@ -115,6 +150,24 @@ class AdminStations extends Component{
     })
   }
   
+resetAddForm() {
+    this.setState({
+        newStationData:{
+          name:'',
+          code:'',
+          day:0,
+          startingStation:'',
+          endingStation:'',
+          departureHour:'',
+          departureMinute:'',
+          arrivalHour:'',
+          arrivalMinute:'',
+          fare:''
+        },
+        departureDateTime: '',
+        arrivalDateTime: ''
+    })
+}
   
   render(){
     let stations=this.state.stations.map((station)=>{
@@ -122,18 +175,16 @@ class AdminStations extends Component{
         <tr key={station._id}>
               <td>{station.name}</td>
               <td>{station.code}</td>
-              <td>{station.day}</td>
+              <td>{getWeekDay(station.day)}</td>
               <td>{station.startingStation}</td>
               <td>{station.endingStation}</td>
-              <td>{station.departureHour}</td>
-              <td>{station.departureMinute}</td>
-              <td>{station.arrivalHour}</td>
-              <td>{station.arrivalMinute}</td>
-              <td>{station.fare}</td>
+              <td>{DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+              <td>{DateTime.fromObject({hour: station.arrivalHour, minute: station.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+              <td>{currencySymbol}{station.fare}</td>
               
               <td>
-                <Button color="success" size="sm" className="mr-2" onClick={this.editStation.bind(this, station._id,station.name, station.code,station.day,station.startingStation, station.endingStation, station.departureHour, station.departureMinute, station.arrivalHour,station.arrivalMinute, station.fare)}>Edit</Button>
-                <Button color="danger" size="sm" onClick={this.deleteStation.bind(this, station._id)}>Delete</Button>
+                <Button color="btn btn-outline-success" size="sm" className="mr-2" onClick={this.editStation.bind(this, station._id,station.name, station.code,station.day,station.startingStation, station.endingStation, station.departureHour, station.departureMinute, station.arrivalHour,station.arrivalMinute, station.fare)} datatoggle="tooltip" dataplacement="top" title="Edit Station"><FaPencilAlt/></Button>
+                <Button color="btn btn-outline-danger" size="sm" onClick={this.deleteStationSetup.bind(this, station._id)} datatoggle="tooltip" dataplacement="top" title="Delete Station"><FaTrashAlt/></Button>
               </td>
             </tr>
       )
@@ -163,15 +214,22 @@ class AdminStations extends Component{
               this.setState({newStationData})
             }}/>
           </FormGroup>
-
-         
           <FormGroup>
             <Label for="day">Day</Label>
-            <Input id="day" value={this.state.newStationData.day} onChange={(e)=>{
-              let {newStationData}=this.state;
-              newStationData.day=e.target.value;
-              this.setState({newStationData})
-            }}/>
+            <br />
+            <select id="day" value={this.state.newStationData.day} onChange={(e)=> {
+                let {newStationData}=this.state;
+                newStationData.day=e.target.value;
+                this.setState({newStationData});
+            }}>
+                <option value={0}>Sunday</option>
+                <option value={1}>Monday</option>
+                <option value={2}>Tuesday</option>
+                <option value={3}>Wednesday</option>
+                <option value={4}>Thursday</option>
+                <option value={5}>Friday</option>
+                <option value={6}>Saturday</option>
+            </select>
           </FormGroup>
           <FormGroup>
             <Label for="startingStation">StartingStation</Label>
@@ -189,39 +247,51 @@ class AdminStations extends Component{
               this.setState({newStationData})
             }}/>
           </FormGroup>
-          
-          
           <FormGroup>
-            <Label for="departureHour">DepartureHour</Label>
-            <Input id="departureHour" value={this.state.newStationData.departureHour} onChange={(e)=>{
-              let {newStationData}=this.state;
-              newStationData.departureHour=e.target.value;
-              this.setState({newStationData})
-            }}/>
+            <Label for="departure">Departure</Label>
+             <br/>
+              <TimePicker
+                id="departure"
+                  onChange={(e) => {
+                      let {departureDateTime}=this.state;
+                      let {newStationData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      departureDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({departureDateTime});
+                      newStationData.departureHour=hours;
+                      newStationData.departureMinute=minutes;
+                      this.setState({newStationData});
+                  }}
+                  value={this.state.departureDateTime}
+              />
           </FormGroup>
           <FormGroup>
-            <Label for="departureMinute">DepartureMinute</Label>
-            <Input id="departureMinute" value={this.state.newStationData.departureMinute} onChange={(e)=>{
-              let {newStationData}=this.state;
-              newStationData.departureMinute=e.target.value;
-              this.setState({newStationData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalHour">ArrivalHour</Label>
-            <Input id="arrivalHour" value={this.state.newStationData.arrivalHour} onChange={(e)=>{
-              let {newStationData}=this.state;
-              newStationData.arrivalHour=e.target.value;
-              this.setState({newStationData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalMinute">ArrivalMinute</Label>
-            <Input id="arrivalMinute" value={this.state.newStationData.arrivalMinute} onChange={(e)=>{
-              let {newStationData}=this.state;
-              newStationData.arrivalMinute=e.target.value;
-              this.setState({newStationData})
-            }}/>
+            <Label for="arrival">Arrival</Label>
+             <br/>
+              <TimePicker
+                id="arrival"
+                  onChange={(e) => {
+                      let {arrivalDateTime}=this.state;
+                      let {newStationData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      arrivalDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({arrivalDateTime});
+                      newStationData.arrivalHour=hours;
+                      newStationData.arrivalMinute=minutes;
+                      this.setState({newStationData});
+                  }}
+                  value={this.state.arrivalDateTime}
+              />
           </FormGroup>
           <FormGroup>
             <Label for="fare">Fare</Label>
@@ -265,11 +335,20 @@ class AdminStations extends Component{
 
           <FormGroup>
             <Label for="day">Day</Label>
-            <Input id="day" value={this.state.editStationData.day} onChange={(e)=>{
-              let {editStationData}=this.state;
-              editStationData.day=e.target.value;
-              this.setState({editStationData})
-            }}/>
+            <br />
+            <select id="day" value={this.state.editStationData.day} onChange={(e)=> {
+                let {editStationData}=this.state;
+                editStationData.day=e.target.value;
+                this.setState({editStationData});
+            }}>
+                <option value={0}>Sunday</option>
+                <option value={1}>Monday</option>
+                <option value={2}>Tuesday</option>
+                <option value={3}>Wednesday</option>
+                <option value={4}>Thursday</option>
+                <option value={5}>Friday</option>
+                <option value={6}>Saturday</option>
+            </select>
           </FormGroup>
            <FormGroup>
             <Label for="startingStation">StartingStation</Label>
@@ -288,39 +367,51 @@ class AdminStations extends Component{
               this.setState({editStationData})
             }}/>
           </FormGroup>
-         
-
           <FormGroup>
-            <Label for="departureHour">DepartureHour</Label>
-            <Input id="departureHour" value={this.state.editStationData.departureHour} onChange={(e)=>{
-              let {editStationData}=this.state;
-              editStationData.departureHour=e.target.value;
-              this.setState({editStationData})
-            }}/>
+            <Label for="departure">Departure</Label>
+             <br/>
+              <TimePicker
+                id="departure"
+                  onChange={(e) => {
+                      let {departureDateTime}=this.state;
+                      let {editStationData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      departureDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({departureDateTime});
+                      editStationData.departureHour=hours;
+                      editStationData.departureMinute=minutes;
+                      this.setState({editStationData});
+                  }}
+                  value={this.state.departureDateTime}
+              />
           </FormGroup>
           <FormGroup>
-            <Label for="departureMinute">DepartureMinute</Label>
-            <Input id="departureMinute" value={this.state.editStationData.departureMinute} onChange={(e)=>{
-              let {editStationData}=this.state;
-              editStationData.departureMinute=e.target.value;
-              this.setState({editStationData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalHour">ArrivalHour</Label>
-            <Input id="arrivalHour" value={this.state.editStationData.arrivalHour} onChange={(e)=>{
-              let {editStationData}=this.state;
-              editStationData.arrivalHour=e.target.value;
-              this.setState({editStationData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="arrivalMinute">ArrivalMinute</Label>
-            <Input id="arrivalMinute" value={this.state.editStationData.arrivalMinute} onChange={(e)=>{
-              let {editStationData}=this.state;
-              editStationData.arrivalMinute=e.target.value;
-              this.setState({editStationData})
-            }}/>
+            <Label for="arrival">Arrival</Label>
+             <br/>
+              <TimePicker
+                id="arrival"
+                  onChange={(e) => {
+                      let {arrivalDateTime}=this.state;
+                      let {editStationData}=this.state;
+                      let [hours, minutes] = [0,0];
+                      arrivalDateTime = e;
+                      try{
+                          [hours, minutes] = e.split(':');
+                      } catch (err) {
+                          [hours, minutes] = [0,0];
+                      }
+                      this.setState({arrivalDateTime});
+                      editStationData.arrivalHour=hours;
+                      editStationData.arrivalMinute=minutes;
+                      this.setState({editStationData});
+                  }}
+                  value={this.state.arrivalDateTime}
+              />
           </FormGroup>
           <FormGroup>
             <Label for="fare">Fare</Label>
@@ -338,6 +429,19 @@ class AdminStations extends Component{
           <Button color="secondary" onClick={this.toggleEditStationModal.bind(this)}>Cancel</Button>
         </ModalFooter>
       </Modal>
+        
+        <Modal isOpen={this.state.deleteStationModal} toggle={this.toggleDeleteStationModal.bind(this)}>
+              <ModalHeader>
+                  Warning: Delete Irreversible
+              </ModalHeader>
+              <ModalBody>
+                  Are you sure you wish to delete this station?
+              </ModalBody>
+              <ModalFooter style={{justifyContent:'space-between'}}>
+                  <Button color="danger" onClick={this.deleteStation.bind(this, this.state.deleteStationID)}>Yes, Delete</Button>{' '}
+                  <Button color="primary" onClick={this.toggleDeleteStationModal.bind(this)}>No</Button>
+              </ModalFooter>
+        </Modal>
 
         <Table>
           <thead>
@@ -347,10 +451,8 @@ class AdminStations extends Component{
               <th>Day</th>
               <th>Starting Station</th>
               <th>Ending Station</th>
-              <th>Departure Hour</th>
-              <th>Departure Minute</th>
-              <th>Arrival Hour</th>
-              <th>Arrival Minute</th>
+              <th>Departure</th>
+              <th>Arrival</th>
               <th>Fare</th>
               
 

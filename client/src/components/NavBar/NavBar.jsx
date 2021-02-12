@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 /*import { Menu } from 'semantic-ui-react'*/
 import {Link} from 'react-router-dom';
 import {Menu} from 'semantic-ui-react';
-import './NavBar.css';
+
 
 // Javascript class rendering navbar
 class NavBar extends Component {
