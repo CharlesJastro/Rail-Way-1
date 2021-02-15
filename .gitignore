@@ -12,8 +12,10 @@ node_modules
 /server/package-lock.json
 /client/package-lock.json
 /admin/package-lock.json
+admin/package-lock.json
 
 client/.eslintcache
+admin/.eslintcache
 
 # testing
 /coverage
@@ -29,14 +31,8 @@ client/.eslintcache
 .env.production.local
 
 client/.env
+server/.env
 
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-server/.env
-client/.eslintcache
-client/.eslintcache
-admin/.eslintcache
-admin/package-lock.json
-admin/.eslintcache
