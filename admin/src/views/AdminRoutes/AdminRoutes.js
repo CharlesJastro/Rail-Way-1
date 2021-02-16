@@ -8,22 +8,13 @@ import {FaTrashAlt} from 'react-icons/fa';
 import {FaPencilAlt} from 'react-icons/fa';
 import {FcAddRow} from 'react-icons/fc'
 import {currencySymbol} from '../../utils/currency';
+import AddRoute from '../../components/AddRoute';
 
 class AdminRoutes extends Component{
   state={
     routes:[],
     departureDateTime: '',
     arrivalDateTime: '',
-    newRouteData:{
-      name:'',
-      status:'On Time',
-      day:0,
-      departureHour:'',
-      departureMinute:'',
-      arrivalHour:'',
-      arrivalMinute:'',
-      fare:''
-    },
     editRouteData:{
       _id:'',
       name:'',
@@ -46,7 +37,6 @@ class AdminRoutes extends Component{
       arrivalMinute:'',
       fare:''
     },
-    newRouteModal:false,
     editRouteModal:false,
     newExceptionModal:false,
     deleteRouteModal: false,
@@ -55,14 +45,6 @@ class AdminRoutes extends Component{
   //GET THE DATA FROM API
   componentDidMount(){
     this._refreshRoutes();
-  }
-  toggleNewRouteModal(){
-    this.setState({
-      newRouteModal: !this.state.newRouteModal
-    });
-    if (!this.state.newRouteModel) {
-        this.resetAddForm();
-    }
   }
   toggleEditRouteModal(){
     this.setState({
@@ -80,13 +62,10 @@ class AdminRoutes extends Component{
     })
   }
   // ADD/POST REQUEST
-  addRoute(){
-    axios.post('/routes', this.state.newRouteData).then((response)=>{
+  addRoute(route){
       let{ routes } = this.state;
-      routes.push(response.data);
-      this.setState({routes, newRouteModal:false})
-    });
-    this.resetAddForm();
+      routes.push(route);
+      this.setState({routes})
   }
   addException(){
     axios.post('/exceptions', this.state.newExceptionData).then((response)=>{
@@ -165,23 +144,6 @@ class AdminRoutes extends Component{
       })
     })
   }
-
-resetAddForm() {
-    this.setState({
-        newRouteData:{
-          name:'',
-          status:'On Time',
-          day:0,
-          departureHour:'',
-          departureMinute:'',
-          arrivalHour:'',
-          arrivalMinute:'',
-          fare:''
-        },
-        departureDateTime: '',
-        arrivalDateTime: ''
-    })
-}
   
   render(){
     let routes=this.state.routes.map((route)=>{
@@ -204,108 +166,6 @@ resetAddForm() {
     return(
       <div className="App container">
         <h2>RAILWAY ADMIN PAGE - ROUTES</h2>
-
-<Button className="my-3" color="primary" onClick={this.toggleNewRouteModal.bind(this)}>Create</Button>
-{/* POST MODEL START */}
-      <Modal isOpen={this.state.newRouteModal} toggle={this.toggleNewRouteModal.bind(this)}>
-        <ModalHeader toggle={this.toggleNewRouteModal.bind(this)}>Add New Route</ModalHeader>
-        <ModalBody>
-
-          <FormGroup>
-            <Label for="name">Name</Label>
-            <Input id="name" value={this.state.newRouteData.name} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.name=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="status">Status</Label>
-            <Input id="status" value={this.state.newRouteData.status} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.status=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
-          <FormGroup>
-            <Label for="day">Day</Label>
-            <br />
-            <select id="day" value={this.state.newRouteData.day} onChange={(e)=> {
-                let {newRouteData}=this.state;
-                newRouteData.day=e.target.value;
-                this.setState({newRouteData});
-            }}>
-                <option value={0}>Sunday</option>
-                <option value={1}>Monday</option>
-                <option value={2}>Tuesday</option>
-                <option value={3}>Wednesday</option>
-                <option value={4}>Thursday</option>
-                <option value={5}>Friday</option>
-                <option value={6}>Saturday</option>
-            </select>
-          </FormGroup> 
-          <FormGroup>
-             <Label for="departure">Departure</Label>
-             <br/>
-              <TimePicker
-                id="departure"
-                  onChange={(e) => {
-                      let {departureDateTime}=this.state;
-                      let {newRouteData}=this.state;
-                      let [hours, minutes] = [0,0];
-                      departureDateTime = e;
-                      try{
-                          [hours, minutes] = e.split(':');
-                      } catch (err) {
-                          [hours, minutes] = [0,0];
-                      }
-                      this.setState({departureDateTime});
-                      newRouteData.departureHour=hours;
-                      newRouteData.departureMinute=minutes;
-                      this.setState({newRouteData});
-                  }}
-                  value={this.state.departureDateTime}
-              />
-          </FormGroup>
-          <FormGroup>
-             <Label for="arrival">Arrival</Label>
-             <br/>
-              <TimePicker
-                id="arrival"
-                  onChange={(e) => {
-                      let {arrivalDateTime}=this.state;
-                      let {newRouteData}=this.state;
-                      let [hours, minutes] = [0,0];
-                      arrivalDateTime = e;
-                      try{
-                          [hours, minutes] = e.split(':');
-                      } catch (err) {
-                          [hours, minutes] = [0,0];
-                      }
-                      this.setState({arrivalDateTime});
-                      newRouteData.arrivalHour=hours;
-                      newRouteData.arrivalMinute=minutes;
-                      this.setState({newRouteData});
-                  }}
-                  value={this.state.arrivalDateTime}
-              />
-          </FormGroup>
-          <FormGroup>
-            <Label for="fare">Fare</Label>
-            <Input id="fare" value={this.state.newRouteData.fare} onChange={(e)=>{
-              let {newRouteData}=this.state;
-              newRouteData.fare=e.target.value;
-              this.setState({newRouteData})
-            }}/>
-          </FormGroup>
-
-        </ModalBody>
-        <ModalFooter>
-          <Button color="primary" onClick={this.addRoute.bind(this)}>ADD</Button>{' '}
-          <Button color="secondary" onClick={this.toggleNewRouteModal.bind(this)}>Cancel</Button>
-        </ModalFooter>
-      </Modal>
-
       {/* EDIT MODEL START */}
 
       <Modal isOpen={this.state.editRouteModal} toggle={this.toggleEditRouteModal.bind(this)}>
@@ -510,6 +370,7 @@ resetAddForm() {
               </ModalFooter>
         </Modal>
 
+        <AddRoute routes={this.addRoute.bind(this)}/>
         <Table>
           <thead>
             <tr>
