@@ -101,7 +101,7 @@ class Travel extends Component {
     return (
       <div>
         <h3>Travel View</h3>
-        <Button onClick={() => window.location.href = "./travelstations"}>From:  Station</Button> <hr />
+        <Button onClick={this.openModal}>From:  Station</Button> <hr />
         <Button onClick={this.openModal}>To:  Station</Button> <hr />
         <Modal
           isOpen={this.state.modalIsOpen}
