@@ -90,6 +90,7 @@ router.patch('/:id', getRoute, async(req,res)=>{
 router.delete('/:id',getRoute, async(req,res)=>{
     try{
         await res.route.remove()
+        await ExceptionRoutes.deleteMany({routeId:req.params.id})
         res.json({message:"Deleted Route"})
     }catch(err){
         res.status(500).json({message:err.message})
