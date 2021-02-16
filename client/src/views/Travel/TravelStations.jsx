@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button'
+import { useState } from 'react';
+import Modal from 'react-modal';
+
+
 
 
 class TravelStations extends Component {
@@ -13,7 +17,7 @@ class TravelStations extends Component {
     
          <Button variant="contained">From Map</Button> <hr/> <br/><br/><br/>
          <h3>Travel View</h3>
-         <Button onClick={()=>window.location.href = "./travelstations" }> Abuja (Idu)   </Button> <hr/>
+         <Button>Abuja (Idu)   </Button> <hr/>
          <Button>ABUJA (Kubwa)       </Button> <hr/>
          <Button>Kaduna (Rigasa)     </Button> <hr/> <br/><br/><br/>
          
