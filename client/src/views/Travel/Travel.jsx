@@ -7,10 +7,14 @@ import axios from 'axios';
 import {DateTime} from 'luxon';
 import TimePicker from 'react-time-picker';
 import styleReset from './styleReset.css';
+import {getWeekDay} from '../../utils/getWeekDay';
+
+let flag = false;
+let path = [];
 
 const Travel = () => {
     const [uniqueStationList, setUniqueStationList] = React.useState([]);
-    const [day, setDay] = React.useState(DateTime.fromJSDate(new Date()).toLocaleString({weekday: 'long'}));
+    const [day, setDay] = React.useState(DateTime.fromJSDate(new Date()).weekday);
     const [time, setTime] = React.useState(DateTime.fromJSDate(new Date()));
     const [timeHour, setTimeHour] = React.useState();
     const [timeMinute, setTimeMinute] = React.useState();
@@ -32,7 +36,7 @@ const Travel = () => {
                 console.log(error);
             }
         }
-        let dt = DateTime.fromJSDate(new Date());
+        setTime(time.toLocaleString(DateTime.TIME_24_SIMPLE));
         fetchData();
     }, []);
     
@@ -75,6 +79,49 @@ const Travel = () => {
             console.log(error);
         }
     }
+    
+    async function getTrip() {
+        let data;
+        try {
+            data = await axios
+                .get('/stations/')
+        } catch (error) {
+            console.log(error);
+        }
+        let x = data.data.filter((station) => {
+            return (station.day === Number(day)); 
+        }).sort((a,b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute);
+        myFunc(fromStation, x);
+        console.log(path);
+    }
+    
+    function myFunc(stationA, stationList) {
+        let stationAList = stationList.filter((station) => {
+            return station.startingStation === stationA;
+        });
+        let updatedStationList = stationList.filter((station) => {
+            return !stationAList.includes(station); 
+        });
+        for (let i = 0; i < stationAList.length-1; i++) {
+            path.push(stationAList[i]);
+            if (stationAList[i].endingStation === toStation) {
+                console.log('Done');
+                console.log(stationAList[i]);
+                flag = true;
+                break;
+            } else {
+                console.log('Continue');
+                console.log(stationAList[i]);
+                myFunc(stationAList[i].endingStation, updatedStationList);
+                console.log(flag);
+                if (flag) {
+                    break;
+                }
+            }
+            path.pop();
+        }
+        return path;
+    }
 
     return (
         <div>
@@ -106,7 +153,7 @@ const Travel = () => {
             <Modal
                 closeIcon
                 open={openDateModal}
-                trigger={<Button >Depart At: {day} at {time.toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
+                trigger={<Button >Depart At: {getWeekDay(Number(day))} at {time.toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
                 onClose={() => setOpenDateModal(false)}
                 onOpen={() => setOpenDateModal(true)}
             >
@@ -118,30 +165,31 @@ const Travel = () => {
                             <select id="day" value={day} onChange={(e) => {
                                 setDay(e.target.value);
                             }}>
-                                <option value={'Sunday'}>Sunday</option>
-                                <option value={'Monday'}>Monday</option>
-                                <option value={'Tuesday'}>Tuesday</option>
-                                <option value={'Wednesday'}>Wednesday</option>
-                                <option value={'Thursday'}>Thursday</option>
-                                <option value={'Friday'}>Friday</option>
-                                <option value={'Saturday'}>Saturday</option>
+                                <option value={0}>Sunday</option>
+                                <option value={1}>Monday</option>
+                                <option value={2}>Tuesday</option>
+                                <option value={3}>Wednesday</option>
+                                <option value={4}>Thursday</option>
+                                <option value={5}>Friday</option>
+                                <option value={6}>Saturday</option>
                             </select>
                         </Form.Field>
                         <Form.Field>
                             <label htmlFor="time">Time</label>
-                            <TimePicker style={styleReset} id="time" value={time.toLocaleString(DateTime.TIME_24_SIMPLE)} onChange={(e)=>{
-                                setTime(DateTime.fromISO(e));
+                            <TimePicker style={styleReset} id="time" value={time} onChange={(e)=>{
+                                //setTime(DateTime.fromISO(e));
+                                setTime(e);
                             }}/>
                             <br />
                             <br />
                             <Button primary onClick={()=>setOpenDateModal(false)}>Confirm</Button>
-                            <Button secondary onClick={()=>[setDay(DateTime.fromJSDate(new Date()).toLocaleString({weekday: 'long'})), setTime(DateTime.fromJSDate(new Date()))]}>Reset</Button>
+                            <Button secondary onClick={()=>[setDay(DateTime.fromJSDate(new Date()).weekday), setTime(DateTime.fromJSDate(new Date()).toLocaleString(DateTime.TIME_24_SIMPLE))]}>Reset</Button>
                         </Form.Field>
                     </Form>
                 </Modal.Content>
             </Modal>
             <hr />
-            <Button animated>
+            <Button animated onClick={getTrip}>
               <Button.Content visible>Find</Button.Content>
               <Button.Content hidden>
                 <Icon name='arrow down' />
