@@ -17,6 +17,7 @@ class RoutesList extends Component {
         }
         this.getRoutes = this.getRoutes.bind(this);
         this.connectionError = this.connectionError.bind(this);
+        this.getRoutesTomorrow = this.getRoutesTomorrow.bind(this);
     }
     
     componentDidMount() {
@@ -44,6 +45,7 @@ class RoutesList extends Component {
             if (this.state.routes.length > 0) {
                 this.setState({connection: 1});
             } else {
+                this.getRoutesTomorrow()
                 this.setState({connection: 2});
             }
         } catch(error) {
@@ -56,6 +58,24 @@ class RoutesList extends Component {
         console.log('error');
     }
     
+     // function returning tomorrow's route information if no more train
+     async getRoutesTomorrow() {
+        let currentDay = new Date().getDay();
+        let data;
+        try {
+            data = await axios
+                .get(`/routes/tomorrow/${currentDay===6 ? 0:currentDay+1}`)
+                console.log(data.data)
+        }catch(error) {
+            console.log(error);
+        }
+        try {
+            this.setState({routes: data.data});
+        } catch(error) {
+            console.log(error);
+        } 
+    }
+
     // JSX rendering Route List information on Route page of the navbar
     render() {
         console.log(DateTime.local().plus({minutes:15})>DateTime.local());
@@ -93,13 +113,33 @@ class RoutesList extends Component {
                 </div>
             );
         } else if (this.state.connection === 2) {
+            console.log(this.state.routes)
             return (
                 <div className="ui container routesList">
                     <h2>Routes List</h2>
-                    <p>There are no more trains operating today</p>
+                    <p>There are no more trains operating today. This is tomorrow's schedule. </p>
+                    <h4>Schedule Timezone: America/Edmonton</h4>
+                    <h4>Your Timezone: {DateTime.local().zoneName}</h4>
+                    <table style={{width:"100%"}}>
+                        <thead>
+                            <tr>
+                                <th>Route</th>
+                                <th>Departure Time</th>
+                                <th>Arrival Time</th>
+                                <th>Fare</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.routes.map((route, index) => (
+                                <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), [<p>{currency} {route.fare}</p>], route.status]}/>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             );
-        } else {
+        } 
+        else {
             return (
                 <div className="ui container routesList">
                     <h2>Routes List</h2>
