@@ -3,6 +3,7 @@ const express=require('express');
 const stations = require('../models/stations');
 const router=express.Router()
 const Stations=require('../models/stations')
+const auth= require('../middleware/auth')
 //Getting All
 router.get('/', async(req,res)=>{
     try{
@@ -25,7 +26,7 @@ router.get('/:id',getStations,(req,res)=>{
     res.json(res.stations)
 })
 //CREATING post request for station
-router.post('/', async(req,res)=>{
+router.post('/',auth, async(req,res)=>{
     const stations=new Stations({
         name: req.body.name,
         day:req.body.day,
@@ -47,7 +48,7 @@ router.post('/', async(req,res)=>{
     }
 })
 //UPDATE STATION
-router.patch('/:id',getStations, async(req,res)=>{
+router.patch('/:id',auth,getStations, async(req,res)=>{
     if(req.body.name != null){
         res.stations.name=req.body.name
     }
@@ -88,7 +89,7 @@ router.patch('/:id',getStations, async(req,res)=>{
     
 })
 //DELETE STATION
-router.delete('/:id',getStations, async(req,res)=>{
+router.delete('/:id',auth,getStations, async(req,res)=>{
     try{
         await res.stations.remove()
         res.json({message:"Deleted Stations"})

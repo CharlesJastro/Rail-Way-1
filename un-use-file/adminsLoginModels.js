@@ -1,4 +1,4 @@
-const mongoose=require('mongoose');
+/*const mongoose=require('mongoose');
 const Schema=mongoose.Schema;
 
 const adminsLoginSchema=new Schema({
@@ -26,4 +26,4 @@ const adminsLoginSchema=new Schema({
 
 const AdminsLogin=mongoose.model('AdminsLogin', adminsLoginSchema)
 
-module.exports=AdminsLogin;
+module.exports=AdminsLogin;*/

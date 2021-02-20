@@ -5,7 +5,7 @@ const router=express.Router()
 const Route= require('../models/route')
 const {DateTime} = require('luxon');
 const ExceptionRoutes = require('../models/exceptionRoutes');
-
+const auth= require('../middleware/auth')
 const TIMEZONE = 'UTC-7';
 //console.log((DateTime.local().setZone(TIMEZONE)).isValid);
 
@@ -39,7 +39,7 @@ router.get('/tomorrow/:day', getRoutesTomorrow, (req,res)=>{
 //     res.json(res.route)
 // })
 //CREATE post request
-router.post('/', async(req,res)=>{
+router.post('/',auth, async(req,res)=>{
     const route= new Route({
         name:req.body.name,
         day: req.body.day,
@@ -58,7 +58,7 @@ router.post('/', async(req,res)=>{
     }
 })
 //UPDATE request
-router.patch('/:id', getRoute, async(req,res)=>{
+router.patch('/:id',auth, getRoute, async(req,res)=>{
     if(req.body.name !==null){
         res.route.name=req.body.name
     }
@@ -91,7 +91,7 @@ router.patch('/:id', getRoute, async(req,res)=>{
     }
 })
 //DELETE request
-router.delete('/:id',getRoute, async(req,res)=>{
+router.delete('/:id',auth,getRoute, async(req,res)=>{
     try{
         await res.route.remove()
         await ExceptionRoutes.deleteMany({routeId:req.params.id})

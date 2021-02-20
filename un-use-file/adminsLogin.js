@@ -1,3 +1,4 @@
+/*
 //Handle station request
 const express=require('express');
 const adminsLogin = require('../models/adminsLogin');
@@ -96,3 +97,4 @@ async function getAdminsLogin(req,res,next){
 }
 
 module.exports=router
+*/

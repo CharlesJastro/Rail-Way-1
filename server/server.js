@@ -8,6 +8,7 @@ const bodyParser = require('body-parser');
 const mongoose=require('mongoose')
 const {DateTime} = require('luxon');
 const morgan = require('morgan');
+const cookieParser=require('cookie-parser')
 
 //DATABASE CONNECTION
 const dbURI=process.env.DATABASE_URL;
@@ -22,6 +23,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'));
+app.use(cookieParser());
 //ROUTER  
 const routeRouter=require('./routes/route.js')
 // Create router for notification requests
@@ -30,8 +32,9 @@ const notifRouter = require('./routes/notifications.js');
 const exceptionsRouter = require('./routes/exceptions.js');
 //Router for STATIONS
 const stationsRouter=require('./routes/stations')
+const userRouter=require('./routes/userRouter')
 //Router Admin login
-const adminsRouter=require('./routes/adminsLogin')
+//const adminsRouter=require('./routes/adminsLogin')
 //Use station router
 app.use('/stations', stationsRouter)
 
@@ -40,8 +43,9 @@ app.use('/routes',routeRouter)
 app.use('/notifications', notifRouter);
 // Use exceptions router
 app.use('/exceptions', exceptionsRouter);
+app.use('/auth', userRouter)
 //use admin router
-app.use('/admins',adminsRouter)
+//app.use('/admins',adminsRouter)
 
 
 

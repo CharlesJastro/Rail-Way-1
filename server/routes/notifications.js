@@ -1,7 +1,7 @@
 // This files handles all notification requests
 let router = require('express').Router();
 const Notifications= require('../models/notifications');
-
+const auth= require('../middleware/auth')
 // Get all notifications
 router.get('/', async(req, res) => {
     try {
@@ -16,7 +16,7 @@ router.get('/:id', getNotif,(req,res)=>{
     res.json(res.notification);
 });
 // Create new notification
-router.post('/', async(req, res) => {
+router.post('/',auth, async(req, res) => {
     const notification = new Notifications({
         title: req.body.title,
         urgency: req.body.urgency,
@@ -30,7 +30,7 @@ router.post('/', async(req, res) => {
     }
 });
 // Update notification
-router.patch('/:id', getNotif, async(req,res)=>{
+router.patch('/:id', auth, getNotif, async(req,res)=>{
     if(req.body.title !=null){
         res.notification.title=req.body.title;
     }
@@ -47,7 +47,7 @@ router.patch('/:id', getNotif, async(req,res)=>{
     }
 });
 // Delete notification
-router.delete('/:id', getNotif, async(req, res) => {
+router.delete('/:id',auth, getNotif, async(req, res) => {
     try {
         await res.notification.remove();
         res.json({message: "Deleted Notification"});
