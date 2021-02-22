@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 //import GoogleMap from '../../components/GoogleMap';
-import { Button, Icon, Modal, Form, Input, Image} from 'semantic-ui-react';
+import { Button, Icon, Modal, Form, Input, Image } from 'semantic-ui-react';
 import { useState } from 'react';
 import axios from 'axios';
-import {DateTime} from 'luxon';
+import { DateTime } from 'luxon';
 import TimePicker from 'react-time-picker';
 import styleReset from './styleReset.css';
-import {getWeekDay} from '../../utils/getWeekDay';
+import { getWeekDay } from '../../utils/getWeekDay';
 
 const Travel = () => {
     const [uniqueStationList, setUniqueStationList] = React.useState([]);
@@ -24,9 +24,10 @@ const Travel = () => {
     const [status, setStatus] = React.useState(0);
     const savedList = JSON.parse(localStorage.getItem('savedList'));
     const [favouriteStations, setFavouriteStations] = React.useState(savedList || ['Rigasa']);
-    
+    const [favouriteToggle, setFavouriteToggle] = React.useState(false);
+
     React.useEffect(() => {
-        async function fetchData () {
+        async function fetchData() {
             let data;
             try {
                 data = await axios
@@ -39,7 +40,7 @@ const Travel = () => {
         fetchData();
         resetTime();
     }, []);
-    
+
     function resetForm() {
         setStatus(0);
         setTrip([]);
@@ -48,70 +49,121 @@ const Travel = () => {
         setToStation('station');
         resetTime();
     }
-    
+
     function resetTime() {
         let dt = DateTime.fromJSDate(new Date());
         setTime(`${dt.hour}:${dt.minute}`);
         setTimeHour(dt.hour);
         setTimeMinute(dt.minute);
     }
-    
+
     React.useEffect(() => {
         console.log(favouriteStations);
         localStorage.setItem('savedList', JSON.stringify(favouriteStations));
     }, [favouriteStations]);
-    
+
     function updateFavourites(station) {
         if (favouriteStations.includes(station)) {
-            setFavouriteStations(favouriteStations.filter(name => name !==station));
+            setFavouriteStations(favouriteStations.filter(name => name !== station));
         } else {
             setFavouriteStations(arr => [...arr, station]);
         }
     }
-    
+
     function showList(type) {
         try {
             if (type === 'from') {
-                return (
-                    uniqueStationList.map((station, index) => (
-                        <div key={station+index}>
-                            <Button.Group fluid>
-                                <Button 
-                                   onClick={() => [setFromStation(station), setOpenFromModal(false)]}
-                                >
-                                    {station}
-                                </Button>
-                                
-                                <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={()=>updateFavourites(station)}/>
-                            </Button.Group>
-                            <br /><br />
-                        </div>
-                    ))
-                );
+                if (!favouriteToggle) {
+                    return (
+                        uniqueStationList.map((station, index) => (
+                            <div key={station + index}>
+                                <Button.Group fluid>
+                                    <Button
+                                        onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
+                                    >
+                                        {station}
+                                    </Button>
+
+                                    <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                </Button.Group>
+                                <br /><br />
+                            </div>
+                        ))
+                    );
+                } else {
+                    if (favouriteStations.length === 0) {
+                        return (
+                            <p>No item on Favourites Stations</p>
+                        )
+                    } else {
+                        return (
+                            favouriteStations.map((station, index) => (
+                                <div key={station + index}>
+                                    <Button.Group fluid>
+                                        <Button
+                                            onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
+                                        >
+                                            {station}
+                                        </Button>
+
+                                        <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                    </Button.Group>
+                                    <br /><br />
+                                </div>
+                            ))
+                        );
+                    }
+                }
             } else {
-                return (
-                    uniqueStationList.map((station, index) => (
-                        <div key={station+index}>
-                            <Button.Group fluid>
-                                <Button 
-                                   onClick={() => [setToStation(station), setOpenToModal(false)]}
-                                >
-                                    {station}
-                                </Button>
-                                
-                                <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={()=>updateFavourites(station)}/>
-                            </Button.Group>
-                            <br /><br />
-                        </div>
-                    ))
-                );
+                if (!favouriteToggle) {
+                    return (
+                        uniqueStationList.map((station, index) => (
+                            <div key={station + index}>
+                                <Button.Group fluid>
+                                    <Button
+                                        onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
+                                    >
+                                        {station}
+                                    </Button>
+
+                                    <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                </Button.Group>
+                                <br /><br />
+                            </div>
+                        ))
+                    );
+                } else {
+                    if (favouriteStations.length === 0) {
+                        return (
+                            <p>No item on Favourites Stations</p>
+                        )
+                    } else {
+                        return (
+                            favouriteStations.map((station, index) => (
+                                <div key={station + index}>
+                                    <Button.Group fluid>
+                                        <Button
+                                            onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
+                                        >
+                                            {station}
+                                        </Button>
+
+                                        <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                    </Button.Group>
+                                    <br /><br />
+                                </div>
+                            ))
+                        );
+                    }
+                }
+
             }
-            
+
         } catch (error) {
             console.log(error);
         }
     }
-    
+
     async function getTrip() {
         let data;
         try {
@@ -125,18 +177,19 @@ const Travel = () => {
         setTrip(path);
         setStatus(1);
     }
-    
+
     if (!status) {
         return (
             <div>
-                <h2>Travel View</h2>
+                <h2>Travel</h2>
                 <Modal
                     open={openFromModal}
                     trigger={<Button fluid>From: {fromStation}</Button>}
-                    onClose={() => setOpenFromModal(false)}
+                    onClose={() => [setOpenFromModal(false),setFavouriteToggle(false)]}
                     onOpen={() => setOpenFromModal(true)}
                 >
-                    <Modal.Header>Select Station</Modal.Header>
+                    <Modal.Header>Select Station</Modal.Header> <br />
+                    <Button onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
                     <Modal.Content>
                         {showList('from')}
                     </Modal.Content>
@@ -145,10 +198,11 @@ const Travel = () => {
                 <Modal
                     open={openToModal}
                     trigger={<Button fluid>To: {toStation}</Button>}
-                    onClose={() => setOpenToModal(false)}
+                    onClose={() => [setOpenToModal(false),setFavouriteToggle(false)]}
                     onOpen={() => setOpenToModal(true)}
                 >
-                    <Modal.Header>Select Station</Modal.Header>
+                    <Modal.Header>Select Station</Modal.Header> <br/>
+                    <Button onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
                     <Modal.Content>
                         {showList('to')}
                     </Modal.Content>
@@ -157,7 +211,7 @@ const Travel = () => {
                 <Modal
                     closeIcon
                     open={openDateModal}
-                    trigger={<Button fluid>Depart At: {getWeekDay(Number(day))} at {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
+                    trigger={<Button fluid>Depart On: {getWeekDay(Number(day))} at {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
                     onClose={() => setOpenDateModal(false)}
                     onOpen={() => setOpenDateModal(true)}
                 >
@@ -180,18 +234,18 @@ const Travel = () => {
                             </Form.Field>
                             <Form.Field>
                                 <label htmlFor="time">Time</label>
-                                <TimePicker 
-                                   style={styleReset} 
-                                   id="time" 
-                                   value={time} 
-                                   onChange={(e)=>{
+                                <TimePicker
+                                    style={styleReset}
+                                    id="time"
+                                    value={time}
+                                    onChange={(e) => {
                                         console.log(e);
-                                        let [hours, minutes] = [0,0];
+                                        let [hours, minutes] = [0, 0];
                                         try {
                                             [hours, minutes] = e.split(':');
 
                                         } catch (err) {
-                                            [hours, minutes] = [0,0];
+                                            [hours, minutes] = [0, 0];
                                         }
                                         setTime(e);
                                         setTimeHour(hours);
@@ -200,30 +254,30 @@ const Travel = () => {
                                 />
                                 <br />
                                 <br />
-                                <Button primary onClick={()=>setOpenDateModal(false)}>Confirm</Button>
-                                <Button secondary onClick={()=>[setDay(new Date().getDay()), resetTime()]}>Reset</Button>
+                                <Button primary onClick={() => setOpenDateModal(false)}>Confirm</Button>
+                                <Button secondary onClick={() => [setDay(new Date().getDay()), resetTime()]}>Reset</Button>
                             </Form.Field>
                         </Form>
                     </Modal.Content>
                 </Modal>
                 <hr />
                 <Button fluid animated='vertical' onClick={(getTrip)}>
-                  <Button.Content visible>Find</Button.Content>
-                  <Button.Content hidden>
-                    <Icon name='arrow down' />
-                  </Button.Content>
+                    <Button.Content visible>Find</Button.Content>
+                    <Button.Content hidden>
+                        <Icon name='arrow down' />
+                    </Button.Content>
                 </Button>
-            </div> 
+            </div>
         );
     } else {
         if (trip.length > 0) {
             return (
                 <div>
-                    <h2>Travel View</h2>
+                    <h2>Travel</h2>
                     <h4>From: {fromStation}</h4>
                     <h4>To: {toStation}</h4>
-                    <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</p>
-                    <table style={{width:"100%"}}>
+                    <p>Departing On: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
+                    <table style={{ width: "100%" }}>
                         <thead>
                             <tr>
                                 <th>Departing</th>
@@ -235,10 +289,10 @@ const Travel = () => {
                         <tbody>
                             {trip.map((station, index) => (
                                 <tr key={station._id}>
-                                   {console.log(DateTime.fromObject({hour: station.arrivalHour, minute: station.arrivalMinute}).diff(DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}), ['hours', 'minutes']).toObject())}
-                                    <td>{station.startingStation} {DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
-                                    <td>{station.endingStation} {DateTime.fromObject({hour: station.arrivalHour, minute: station.arrivalMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</td>
-                                    <td>{DateTime.fromObject({hour: station.arrivalHour, minute: station.arrivalMinute}).diff(DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}), ['hours', 'minutes']).toObject().hours}hr {DateTime.fromObject({hour: station.arrivalHour, minute: station.arrivalMinute}).diff(DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}), ['hours', 'minutes']).toObject().minutes}min </td>
+                                    {console.log(DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject())}
+                                    <td>{station.startingStation} {DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+                                    <td>{station.endingStation} {DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+                                    <td>{DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject().hours}hr {DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject().minutes}min </td>
                                     <td>{station.fare}</td>
                                 </tr>
                             ))}
@@ -252,10 +306,10 @@ const Travel = () => {
         } else {
             return (
                 <div>
-                    <h2>Travel View</h2>
+                    <h2>Travel</h2>
                     <h4>From: {fromStation}</h4>
                     <h4>To: {toStation}</h4>
-                    <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</p>
+                    <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
                     <p>I'm sorry, but this trip is not possible at this time and day. Please pick another time, day or select different stations</p>
                     <br />
                     <Button onClick={resetForm}>Plan Another Trip</Button>
@@ -263,7 +317,7 @@ const Travel = () => {
             );
         }
     }
-        
+
 };
 
 export default Travel;
