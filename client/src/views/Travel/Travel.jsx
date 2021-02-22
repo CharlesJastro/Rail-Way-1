@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import GoogleMap from '../../components/GoogleMap';
-import { Button, Icon, Modal, Form, Input} from 'semantic-ui-react';
+import { Button, Icon, Modal, Form, Input, Image} from 'semantic-ui-react';
 import { useState } from 'react';
 import axios from 'axios';
 import {DateTime} from 'luxon';
@@ -8,12 +8,9 @@ import TimePicker from 'react-time-picker';
 import styleReset from './styleReset.css';
 import {getWeekDay} from '../../utils/getWeekDay';
 
-let flag = false;
-let path = [];
-
 const Travel = () => {
     const [uniqueStationList, setUniqueStationList] = React.useState([]);
-    const [day, setDay] = React.useState(DateTime.fromJSDate(new Date()).weekday);
+    const [day, setDay] = React.useState(new Date().getDay());
     const [time, setTime] = React.useState('00:00');
     const [timeHour, setTimeHour] = React.useState();
     const [timeMinute, setTimeMinute] = React.useState();
@@ -25,6 +22,8 @@ const Travel = () => {
     const [openDateModal, setOpenDateModal] = React.useState(false);
     const [trip, setTrip] = React.useState(false);
     const [status, setStatus] = React.useState(0);
+    const savedList = JSON.parse(localStorage.getItem('savedList'));
+    const [favouriteStations, setFavouriteStations] = React.useState(savedList || ['Rigasa']);
     
     React.useEffect(() => {
         async function fetchData () {
@@ -41,14 +40,10 @@ const Travel = () => {
         resetTime();
     }, []);
     
-    React.useEffect(() => {
-        console.log(trip);
-    }, [trip]);
-    
     function resetForm() {
         setStatus(0);
         setTrip([]);
-        setDay(DateTime.fromJSDate(new Date()).weekday);
+        setDay(new Date().getDay());
         setFromStation('station');
         setToStation('station');
         resetTime();
@@ -61,18 +56,35 @@ const Travel = () => {
         setTimeMinute(dt.minute);
     }
     
+    React.useEffect(() => {
+        console.log(favouriteStations);
+        localStorage.setItem('savedList', JSON.stringify(favouriteStations));
+    }, [favouriteStations]);
+    
+    function updateFavourites(station) {
+        if (favouriteStations.includes(station)) {
+            setFavouriteStations(favouriteStations.filter(name => name !==station));
+        } else {
+            setFavouriteStations(arr => [...arr, station]);
+        }
+    }
+    
     function showList(type) {
         try {
             if (type === 'from') {
                 return (
                     uniqueStationList.map((station, index) => (
                         <div key={station+index}>
-                            <Button 
-                               onClick={() => [setFromStation(station), setOpenFromModal(false)]}
-                            >
-                                {station}
-                            </Button>
-                            <br /> <br/>
+                            <Button.Group fluid>
+                                <Button 
+                                   onClick={() => [setFromStation(station), setOpenFromModal(false)]}
+                                >
+                                    {station}
+                                </Button>
+                                
+                                <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={()=>updateFavourites(station)}/>
+                            </Button.Group>
+                            <br /><br />
                         </div>
                     ))
                 );
@@ -80,12 +92,16 @@ const Travel = () => {
                 return (
                     uniqueStationList.map((station, index) => (
                         <div key={station+index}>
-                            <Button 
-                               onClick={() => [setToStation(station), setOpenToModal(false)]}
-                            >
-                                {station}
-                            </Button>
-                            <br /> <br/>
+                            <Button.Group fluid>
+                                <Button 
+                                   onClick={() => [setToStation(station), setOpenToModal(false)]}
+                                >
+                                    {station}
+                                </Button>
+                                
+                                <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={()=>updateFavourites(station)}/>
+                            </Button.Group>
+                            <br /><br />
                         </div>
                     ))
                 );
@@ -100,62 +116,23 @@ const Travel = () => {
         let data;
         try {
             data = await axios
-                .get('/stations/')
+                .get(`/stations/trip/from/${fromStation}/to/${toStation}/day/${Number(day)}/hour/${timeHour}/minute/${timeMinute}`)
         } catch (error) {
             console.log(error);
         }
-        let x = data.data.filter((station) => {
-            return (station.day === Number(day)) && (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) > DateTime.fromObject({hour: timeHour, minute: timeMinute})); 
-        }).sort((a,b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute);
-        myFunc(fromStation, x, timeHour, timeMinute);
+        let path = data.data;
         console.log(path);
         setTrip(path);
         setStatus(1);
-        flag = false;
-        path = [];
     }
     
-    function myFunc(stationA, stationList, hour, minute) {
-        let stationAList = stationList.filter((station) => {
-            return station.startingStation === stationA;
-        });
-        stationAList = stationAList.filter((station) => {
-            return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) > DateTime.fromObject({hour: hour, minute: minute})); 
-        });
-        let updatedStationList = stationList.filter((station) => {
-            return !stationAList.includes(station); 
-        });
-        updatedStationList = updatedStationList.filter((station) => {
-            return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) > DateTime.fromObject({hour: hour, minute: minute}));
-        });
-        console.log(updatedStationList);
-        for (let i = 0; i < stationAList.length-1; i++) {
-            path.push(stationAList[i]);
-            if (stationAList[i].endingStation === toStation) {
-                console.log('Done');
-                console.log(stationAList[i]);
-                flag = true;
-                break;
-            } else {
-                console.log('Continue');
-                console.log(stationAList[i]);
-                myFunc(stationAList[i].endingStation, updatedStationList, stationAList[i].arrivalHour, stationAList[i].arrivalMinute);
-                console.log(flag);
-                if (flag) {
-                    break;
-                }
-            }
-            path.pop();
-        }
-        return path;
-    }
     if (!status) {
         return (
             <div>
-                <h3>Travel View</h3>
+                <h2>Travel View</h2>
                 <Modal
                     open={openFromModal}
-                    trigger={<Button >From: {fromStation}</Button>}
+                    trigger={<Button fluid>From: {fromStation}</Button>}
                     onClose={() => setOpenFromModal(false)}
                     onOpen={() => setOpenFromModal(true)}
                 >
@@ -167,7 +144,7 @@ const Travel = () => {
                 <hr />
                 <Modal
                     open={openToModal}
-                    trigger={<Button >To: {toStation}</Button>}
+                    trigger={<Button fluid>To: {toStation}</Button>}
                     onClose={() => setOpenToModal(false)}
                     onOpen={() => setOpenToModal(true)}
                 >
@@ -180,7 +157,7 @@ const Travel = () => {
                 <Modal
                     closeIcon
                     open={openDateModal}
-                    trigger={<Button >Depart At: {getWeekDay(Number(day))} at {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
+                    trigger={<Button fluid>Depart At: {getWeekDay(Number(day))} at {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
                     onClose={() => setOpenDateModal(false)}
                     onOpen={() => setOpenDateModal(true)}
                 >
@@ -224,13 +201,13 @@ const Travel = () => {
                                 <br />
                                 <br />
                                 <Button primary onClick={()=>setOpenDateModal(false)}>Confirm</Button>
-                                <Button secondary onClick={()=>[setDay(DateTime.fromJSDate(new Date()).weekday), resetTime()]}>Reset</Button>
+                                <Button secondary onClick={()=>[setDay(new Date().getDay()), resetTime()]}>Reset</Button>
                             </Form.Field>
                         </Form>
                     </Modal.Content>
                 </Modal>
                 <hr />
-                <Button animated onClick={(getTrip)}>
+                <Button fluid animated='vertical' onClick={(getTrip)}>
                   <Button.Content visible>Find</Button.Content>
                   <Button.Content hidden>
                     <Icon name='arrow down' />
@@ -242,17 +219,17 @@ const Travel = () => {
         if (trip.length > 0) {
             return (
                 <div>
-                    <h3>Travel View</h3>
+                    <h2>Travel View</h2>
                     <h4>From: {fromStation}</h4>
                     <h4>To: {toStation}</h4>
                     <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</p>
-                    <table>
+                    <table style={{width:"100%"}}>
                         <thead>
                             <tr>
                                 <th>Departing</th>
                                 <th>Arriving</th>
                                 <th>Duration</th>
-                                <th>Fare</th>
+                                <th>Fare*</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -268,13 +245,14 @@ const Travel = () => {
                         </tbody>
                     </table>
                     <br />
+                    <p>* Fares are typically for an entire route. Please consult your ticket vendor for final fare</p>
                     <Button onClick={resetForm}>Plan Another Trip</Button>
                 </div>
             );
         } else {
             return (
                 <div>
-                    <h3>Travel View</h3>
+                    <h2>Travel View</h2>
                     <h4>From: {fromStation}</h4>
                     <h4>To: {toStation}</h4>
                     <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({hours: timeHour, minutes: timeMinute}).toLocaleString(DateTime.TIME_SIMPLE)}</p>

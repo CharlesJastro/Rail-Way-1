@@ -4,6 +4,8 @@ const stations = require('../models/stations');
 const router=express.Router()
 const Stations=require('../models/stations')
 const auth= require('../middleware/auth')
+const {DateTime} = require('luxon');
+const tripPlanner = require('../utils/tripPlanner');
 //Getting All
 router.get('/', async(req,res)=>{
     try{
@@ -21,10 +23,15 @@ router.get('/list', getList, (req,res)=> {
 router.get('/day/:id', getStations, (req,res)=>{
     res.json(res.stations);
 });
+// Get Trip
+// Expect Day, hour, and minute from user
+router.get('/trip/from/:from/to/:to/day/:day/hour/:hour/minute/:minute', getTrip, (req, res) => {
+    res.json(res.stations);
+});
 //Getting by ID
 router.get('/:id',getStations,(req,res)=>{
     res.json(res.stations)
-})
+});
 //CREATING post request for station
 router.post('/',auth, async(req,res)=>{
     const stations=new Stations({
@@ -130,6 +137,24 @@ async function getList(req,res,next){
         res.status(500).json({message: err.message})
     }
     res.stations=stationList
+    next()
+}
+
+async function getTrip(req,res,next){
+    let stations;
+    try{
+        stations = await Stations.find({day: req.params.day});
+        
+    }catch(err){
+        res.status(500).json({message: err.message})
+    }
+    stations = stations.filter((station) => {
+        return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) > DateTime.fromObject({hour: req.params.hour, minute: req.params.minute}));
+    }).sort((a,b) => a.departureHour-b.departureHour || a.depratureMinute-b.departureMinute);
+    
+    let trip = tripPlanner(req.params.from, stations, req.params.hour, req.params.minute, req.params.to);
+    
+    res.stations=trip
     next()
 }
 

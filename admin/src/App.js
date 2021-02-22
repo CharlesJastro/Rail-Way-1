@@ -16,7 +16,7 @@
 // }
 // export default App;
 import React from 'react';
-import Router from './Routes';
+import Router from './routes';
 import {AuthContextProvider} from './Context/AuthContext'
 function App(){
   return <AuthContextProvider>
