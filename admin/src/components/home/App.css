@@ -1,0 +1,45 @@
+.showcase{
+    margin:10px 0;
+    font-size:17px;
+    color:rgb(35, 163, 56);
+    line-height: 1.6;
+    background-image: url('https://i2.wp.com/ydhr.ca/wp-content/uploads/2019/06/Logo-1.png?fit=3137%2C2211&ssl=1');
+    background-size: cover;
+    background-position: center; 
+    height: 85vh;
+    
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    padding: 10px 20px;
+  }
+  .showcase h2{
+    font-size: 40px;
+    
+  }
+  .showcase p{
+    font-size: 20px;
+    color: rgb(75, 121, 70);
+  
+  }
+.showcase-login{
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  color: white;
+  border:white 1px solid;
+  padding: 5px 15px;
+  border-radius: 15px;
+  margin-top:10px
+}
+.showcase-login:hover{
+  background: greenyellow;
+}
+.copy{
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 15rem;
+  color: rgb(112, 168, 48);
+
+}

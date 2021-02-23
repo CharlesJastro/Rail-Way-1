@@ -23,7 +23,9 @@ import trainImg from '../layout/classic_locomotive_train_312396.png'
 
     return(
         <div>
-            <Navbar collapseonselect color="dark" expand="sm" className="mb-5">
+            
+         
+            <Navbar collapseonselect color="dark" expand="sm" className="mb" sticky="top" variant="dark">
                 <NavbarBrand className="mr-auto text-white"  href="/">
                     <img alt=""
                  src={trainImg}

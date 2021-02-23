@@ -84,13 +84,16 @@ import {AdminExceptions} from './views/AdminExceptions';
 import {AdminRoutes} from './views/AdminRoutes';
 import {AdminNotifications} from './views/AdminNotifications';
 import AuthContext from './Context/AuthContext';
+import Home from './components/home/Home';
+//import Home from './components/home/Home';
+
 function Router(){
   const {loggedIn} = useContext(AuthContext)
   return <BrowserRouter>
   <NavBar/>
   <Switch>
-    <Route exact path="/home">
-      <div>RialWay</div>
+    <Route exact path="/">
+      <Home/>
       </Route>
       {loggedIn ===false && (<>
         {/* <Route path="/register">
