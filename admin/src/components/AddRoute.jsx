@@ -5,7 +5,6 @@ import {getWeekDay} from '../utils/getWeekDay.js';
 import TimePicker from 'react-time-picker';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
 
-
 const AddRoute = (props) => {
     const [routeName, setRouteName] = React.useState('');
     const [routeStatus, setRouteStatus] = React.useState('On Time');
@@ -64,31 +63,43 @@ const AddRoute = (props) => {
         setRouteArrivalMinute(0);
         setRouteFare('');
     }
+    
     function validateForm() {
-       let valid = true
-       let msg = ""
-       console.log(routeFare);
-       console.log(routeName);
-       console.log(typeof routeDay)
-       console.log(routeDepartureHour)
-       console.log(routeDepartureMinute)
-       console.log(routeArrivalMinute)
-       console.log(routeArrivalHour)
-        if (routeName.length ===0){valid=false;msg="please write down route name"}
-        if (routeStatus.length===0){valid=false;msg="please write down route status"}
-        if( routeDay.length === 0){valid=false;msg="please select route day"}
-        if( routeDepartureHour.length ===0){valid=false;msg="please select departure time"}
-        if( routeDepartureMinute.length ===0){valid=false;msg="please select departure time"}
-        if(routeArrivalHour.length ===0){valid=false;msg="please select arrival time"}
-        if(routeArrivalMinute.length ===0){valid=false;msg="please select arrival time"}
-        if(routeFare.length ===0){valid=false;msg="please write down fare"}
-     if (valid) { 
-        addRoute() 
-        
-     } 
-     else {
-         alert(msg)
-     }
+        let valid = true;
+        let msg = "";
+        if (routeName.length ===0){
+            valid=false;
+            msg="Please enter the name of the route.";
+        } else if (routeStatus.length===0){
+            valid=false;
+            msg="Please write down route status";
+        } else if (routeDay.length === 0){
+            valid=false;
+            msg="Please select route day";
+        } else if (routeDepartureHour.length ===0){
+            valid=false;
+            msg="Please select departure time";
+        } else if (routeDepartureMinute.length ===0){
+            valid=false;
+            msg="Please select departure time";
+        } else if (routeArrivalHour.length ===0){
+            valid=false;
+            msg="Please select arrival time";
+        } else if (routeArrivalMinute.length ===0){
+            valid=false;
+            msg="Please select arrival time";
+        } else if (routeFare.length ===0){
+            valid=false;
+            msg="Please write down fare"; 
+        } else if (isNaN(routeFare)) {
+            valid=false;
+            msg="Please write down fare";    
+        } 
+        if (valid) { 
+            addRoute();
+        } else {
+            alert(msg);
+        }
     }
     
     return (

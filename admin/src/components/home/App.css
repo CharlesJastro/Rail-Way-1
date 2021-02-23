@@ -3,11 +3,7 @@
     font-size:17px;
     color:rgb(35, 163, 56);
     line-height: 1.6;
-    background-image: url('https://i2.wp.com/ydhr.ca/wp-content/uploads/2019/06/Logo-1.png?fit=3137%2C2211&ssl=1');
-    background-size: cover;
-    background-position: center; 
     height: 85vh;
-    
     display: flex;
     flex-direction: column;
     /* justify-content: center; */

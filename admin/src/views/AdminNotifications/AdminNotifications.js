@@ -119,7 +119,7 @@ class AdminNotifications extends Component{
       )
     });
     return(
-      <div className="App container">
+      <div className="App container" style={{minHeight:'90vh'}}>
         <h2>RAILWAY ADMIN PAGE</h2>
         
 <Button className="my-3" color="primary" onClick={this.toggleNewNotificationModal.bind(this)}>Create</Button>

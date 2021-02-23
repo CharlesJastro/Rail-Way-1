@@ -129,7 +129,7 @@ deleteAllExceptions() {
       )
     });
     return(
-      <div className="App container">
+      <div className="App container" style={{minHeight:'90vh'}}>
         <h2>RAILWAY ADMIN PAGE - EXCEPTIONS</h2>
 {/* EDIT MODEL START */}
 

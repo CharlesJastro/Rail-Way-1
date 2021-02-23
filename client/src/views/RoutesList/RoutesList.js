@@ -65,7 +65,6 @@ class RoutesList extends Component {
         try {
             data = await axios
                 .get(`/routes/tomorrow/${currentDay===6 ? 0:currentDay+1}`)
-                console.log(data.data)
         }catch(error) {
             console.log(error);
         }
@@ -78,7 +77,6 @@ class RoutesList extends Component {
 
     // JSX rendering Route List information on Route page of the navbar
     render() {
-        console.log(DateTime.local().plus({minutes:15})>DateTime.local());
         if (this.state.connection === -1) {
             console.log('Error');
             return (
@@ -106,18 +104,17 @@ class RoutesList extends Component {
                         </thead>
                         <tbody>
                             {this.state.routes.map((route, index) => (
-                                <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), [<p>{currency} {route.fare}</p>], ...(DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? ["Departing Soon" + "/" + route.status] : [route.status])]}/>
+                                <ListItem key={route._id} id={index} className={DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? "animate-flicker" : ""} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), `${currency} ${route.fare}`, ...(DateTime.fromISO(route.departure) <= DateTime.local().plus({minutes:15}) ? ["Departing Soon" + "/" + route.status] : [route.status])]}/>
                             ))}
                         </tbody>
                     </table>
                 </div>
             );
         } else if (this.state.connection === 2) {
-            console.log(this.state.routes)
             return (
                 <div className="ui container routesList">
                     <h2>Routes</h2>
-                    <p>There are no more trains operating today. See tomorrow's schedule. </p>
+                    <p>There are no more trains operating today. Displaying tomorrow's schedule. </p>
                     <h4>Schedule Timezone: {DateTime.local().zoneName}</h4>
                     <table style={{width:"100%"}}>
                         <thead>
@@ -131,7 +128,7 @@ class RoutesList extends Component {
                         </thead>
                         <tbody>
                             {this.state.routes.map((route, index) => (
-                                <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), [<p>{currency} {route.fare}</p>], route.status]}/>
+                                <ListItem key={route._id} id={index} data={[route.name, DateTime.fromISO(route.departure).toLocaleString(DateTime.TIME_SIMPLE), DateTime.fromISO(route.arrival).toLocaleString(DateTime.TIME_SIMPLE), `${currency} ${route.fare}`, route.status]}/>
                             ))}
                         </tbody>
                     </table>

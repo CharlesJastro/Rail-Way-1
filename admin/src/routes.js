@@ -89,11 +89,12 @@ import Home from './components/home/Home';
 
 function Router(){
   const {loggedIn} = useContext(AuthContext)
+  {console.log(loggedIn)}
   return <BrowserRouter>
   <NavBar/>
   <Switch>
     <Route exact path="/">
-      <Home/>
+      <Home isLoggedIn={loggedIn}/>
       </Route>
       {loggedIn ===false && (<>
         {/* <Route path="/register">
@@ -118,9 +119,7 @@ function Router(){
     <Route path="/stations">
       <AdminStations/>
     </Route>
-    <Route path="/notfound">
-      <NotFound/>
-    </Route>
+    <p className="copy">&copy;2021 Railway</p>
           </>
         )
       }

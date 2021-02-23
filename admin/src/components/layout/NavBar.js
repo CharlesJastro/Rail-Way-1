@@ -1,76 +1,73 @@
 import React, { useState } from 'react';
 import {Link} from 'react-router-dom';
 import './App.css'
-import{Nav,
-    NavLink,
+import{
     Collapse,
     Navbar,
     NavbarToggler,
     NavbarBrand,
-    NavItem
+    Nav,
+    NavItem,
+    NavLink,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    NavbarText
 } from 'reactstrap'
 import {useContext} from 'react';
 import AuthContext from '../../Context/AuthContext';
 import LogOutBtn from '../Auth/LogOutBtn';
 import trainImg from '../layout/classic_locomotive_train_312396.png'
  function NavBar(props){
-     
-    
-    const [collapsed, setCollapsed] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
 
-  const toggleNavbar = () => setCollapsed(!collapsed);
-     const {loggedIn}=useContext(AuthContext);
+    const toggle = () => setIsOpen(!isOpen);
+    const {loggedIn}=useContext(AuthContext);
 
     return(
         <div>
-            
-         
-            <Navbar collapseonselect color="dark" expand="sm" className="mb" sticky="top" variant="dark">
+            <Navbar color="dark" dark expand="sm" sticky="top">
                 <NavbarBrand className="mr-auto text-white"  href="/">
                     <img alt=""
-                 src={trainImg}
-                 width="60"
-                 height="30"
-                 className="d-inline-block align-top" />{' '}
-                Rail-Way
+                        src={trainImg}
+                        width="60"
+                        height="30"
+                        className="d-inline-block align-top" />{' '}
+                        Rail-Way
                 </NavbarBrand>
-                
-                <NavbarToggler onClick={toggleNavbar} className="mr-2" />
-                <Collapse isOpen={!collapsed} navbar>
+                <NavbarToggler onClick={toggle} />
+                <Collapse isOpen={isOpen} navbar>
                     <Nav className="ml-auto" navbar>
-            <NavItem>
-        {loggedIn ===false && (
-                <>
-                {/* <NavLink to="/register">Register</NavLink> */}
-                <NavLink className="text-white" href="/login">Admin Login</NavLink>
-                </>
-            )
-        }
-        </NavItem>
-        
-        {
-            loggedIn ===true && (
-                <>
-        <NavLink className="text-white" href="/exceptions">Exceptions</NavLink>
-         <NavLink className="text-white" href="/routes">Routes</NavLink>
-         <NavLink className="text-white" href="/notifications">Notifications</NavLink>
-         <NavLink className="text-white" href="/stations">Stations</NavLink>
-         
-         
-         <LogOutBtn className="text-white" />
-         
-         
-                </>
-            )
-        }
-        
-       
-        </Nav>
-         </Collapse>
-         
+                        {loggedIn ===false && (
+                            <NavItem>
+                                <NavLink className="text-white" href="/login">Admin Login</NavLink>
+                            </NavItem>
+                        )}
+                        {loggedIn ===true && (
+                            <>
+                            <NavItem>
+                                <NavLink className="text-white" href="/exceptions">Exceptions</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink className="text-white" href="/routes">Routes</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink className="text-white" href="/notifications">Notifications</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink className="text-white" href="/stations">Stations</NavLink>
+                            </NavItem>
+                            <NavItem>   
+                                <LogOutBtn className="text-white" />
+                            </NavItem>
+                            </>
+                            )
+                        }
+                    </Nav>
+                </Collapse>
          </Navbar>
-         
-        </div>
+    </div>
 
 
         

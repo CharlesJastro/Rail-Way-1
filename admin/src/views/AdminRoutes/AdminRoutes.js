@@ -164,7 +164,7 @@ class AdminRoutes extends Component{
       )
     });
     return(
-      <div className="App container">
+      <div className="App container" style={{minHeight:'90vh'}}>
         <h2>RAILWAY ADMIN PAGE - ROUTES</h2>
       {/* EDIT MODEL START */}
 

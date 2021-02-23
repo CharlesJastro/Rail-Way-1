@@ -8,7 +8,7 @@ const ListItem = ({id, className, data}) => {
         <Popup
             trigger={<tr id={id} className={`routeRow ${className}`} onClick={()=>window.location.href = "/route/" + data[0]}>
                 {data.map((x, index)=> (
-                    <ListSubItem key={index} data={x} />
+                    <ListSubItem key={index + x} data={x} />
                 ))}
             </tr>}
             content="Click for daily schedule"

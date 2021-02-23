@@ -58,7 +58,6 @@ const Travel = () => {
     }
 
     React.useEffect(() => {
-        console.log(favouriteStations);
         localStorage.setItem('savedList', JSON.stringify(favouriteStations));
     }, [favouriteStations]);
 
@@ -173,7 +172,6 @@ const Travel = () => {
             console.log(error);
         }
         let path = data.data;
-        console.log(path);
         setTrip(path);
         setStatus(1);
     }
@@ -239,7 +237,6 @@ const Travel = () => {
                                     id="time"
                                     value={time}
                                     onChange={(e) => {
-                                        console.log(e);
                                         let [hours, minutes] = [0, 0];
                                         try {
                                             [hours, minutes] = e.split(':');
@@ -289,7 +286,6 @@ const Travel = () => {
                         <tbody>
                             {trip.map((station, index) => (
                                 <tr key={station._id}>
-                                    {console.log(DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject())}
                                     <td>{station.startingStation} {DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</td>
                                     <td>{station.endingStation} {DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</td>
                                     <td>{DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject().hours}hr {DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject().minutes}min </td>

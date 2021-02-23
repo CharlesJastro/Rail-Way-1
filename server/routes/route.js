@@ -9,7 +9,6 @@ const Notifications = require('../models/notifications')
 
 const auth= require('../middleware/auth')
 const TIMEZONE = 'UTC-7';
-//console.log((DateTime.local().setZone(TIMEZONE)).isValid);
 
 //GET-ALL
 
@@ -92,9 +91,9 @@ router.patch('/:id',auth, getRoute, async(req,res)=>{
         res.status(400).json({message : err.message})
     }
     const notification= new Notifications({
-        title:`Route ${res.route.name} has been updated`,
+        title:`The ${res.route.name} route has been updated`,
         urgency: 'info',
-        message:'Check schedule'
+        message:'Please consult the schedule.'
     }) 
     try {
         await notification.save()

@@ -190,7 +190,7 @@ resetAddForm() {
       )
     });
     return(
-      <div className="App container">
+      <div className="App container" style={{minHeight:'90vh'}}>
         <h2>RAILWAY ADMIN PAGE - STATIONS</h2>
 
 <Button className="my-3" color="primary" onClick={this.toggleNewStationModal.bind(this)}>Create</Button>

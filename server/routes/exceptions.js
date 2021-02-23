@@ -31,9 +31,9 @@ router.post('/', auth, async(req, res) => {
         status: req.body.status
     });
     const notification= new Notifications({
-        title:`Exception ${exception.name} has been updated`,
+        title:`The ${exception.name} route is experiencing a disruption`,
         urgency: 'alert',
-        message:'Check schedule'
+        message:`Please plan your trip accordingly`
     }) 
     try {
     
