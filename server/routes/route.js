@@ -5,6 +5,7 @@ const router=express.Router()
 const Route= require('../models/route')
 const {DateTime} = require('luxon');
 const ExceptionRoutes = require('../models/exceptionRoutes');
+const Notifications = require('../models/notifications')
 
 const TIMEZONE = 'UTC-7';
 //console.log((DateTime.local().setZone(TIMEZONE)).isValid);
@@ -85,6 +86,17 @@ router.patch('/:id', getRoute, async(req,res)=>{
     }catch(err){
         res.status(400).json({message : err.message})
     }
+    const notification= new Notifications({
+        title:`Route ${res.route.name} has been updated`,
+        urgency: 'info',
+        message:'Check schedule'
+    }) 
+    try {
+        await notification.save()
+    }catch(err){
+        console.log(err)
+    }
+
 })
 //DELETE request
 router.delete('/:id',getRoute, async(req,res)=>{

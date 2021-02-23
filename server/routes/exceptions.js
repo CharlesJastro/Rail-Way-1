@@ -1,6 +1,7 @@
 // This files handles all exceptions requests
 let router = require('express').Router();
 const Exceptions= require('../models/exceptionRoutes');
+const Notifications = require('../models/notifications');
 
 // Get all exceptions
 router.get('/', async(req, res) => {
@@ -28,8 +29,15 @@ router.post('/', async(req, res) => {
         routeId: req.body.routeId,
         status: req.body.status
     });
+    const notification= new Notifications({
+        title:`Exception ${exception.name} has been updated`,
+        urgency: 'alert',
+        message:'Check schedule'
+    }) 
     try {
+    
         const newExceptions = await exception.save();
+        await notification.save()
         res.status(201).json(newExceptions);
     } catch(err) {
         res.status(400).json({message: err.message});

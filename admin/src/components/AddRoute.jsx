@@ -5,6 +5,7 @@ import {getWeekDay} from '../utils/getWeekDay.js';
 import TimePicker from 'react-time-picker';
 import {Modal,ModalHeader, ModalBody,ModalFooter,Table,Button, Label, Input, FormGroup} from 'reactstrap';
 
+
 const AddRoute = (props) => {
     const [routeName, setRouteName] = React.useState('');
     const [routeStatus, setRouteStatus] = React.useState('On Time');
@@ -38,10 +39,18 @@ const AddRoute = (props) => {
             arrivalHour: routeArrivalHour,
             arrivalMinute: routeArrivalMinute,
             fare: routeFare
+
         }
-        axios.post('/routes', newRouteData).then((response)=>{
-            props.routes(response.data);
-        });
+        try {
+            axios.post('/routes', newRouteData).then((response)=>{
+                props.routes(response.data);
+            }).catch(err => {if (err.response){alert("there was an error")}});
+
+        } catch (error){
+            console.log(error)
+            alert("there was an error")
+        }
+        
         setOpenModal(false);
     }
     
@@ -55,6 +64,32 @@ const AddRoute = (props) => {
         setRouteArrivalMinute(0);
         setRouteFare('');
     }
+    function validateForm() {
+       let valid = true
+       let msg = ""
+       console.log(routeFare);
+       console.log(routeName);
+       console.log(typeof routeDay)
+       console.log(routeDepartureHour)
+       console.log(routeDepartureMinute)
+       console.log(routeArrivalMinute)
+       console.log(routeArrivalHour)
+        if (routeName.length ===0){valid=false;msg="please write down route name"}
+        if (routeStatus.length===0){valid=false;msg="please write down route status"}
+        if( routeDay.length === 0){valid=false;msg="please select route day"}
+        if( routeDepartureHour.length ===0){valid=false;msg="please select departure time"}
+        if( routeDepartureMinute.length ===0){valid=false;msg="please select departure time"}
+        if(routeArrivalHour.length ===0){valid=false;msg="please select arrival time"}
+        if(routeArrivalMinute.length ===0){valid=false;msg="please select arrival time"}
+        if(routeFare.length ===0){valid=false;msg="please write down fare"}
+     if (valid) { 
+        addRoute() 
+        
+     } 
+     else {
+         alert(msg)
+     }
+    }
     
     return (
         <>
@@ -66,13 +101,15 @@ const AddRoute = (props) => {
                       <Label for="name">Name</Label>
                       <Input id="name" value={routeName} onChange={(e)=>{
                               setRouteName(e.target.value);
-                      }}/>
+                      }}/> 
+                      
                   </FormGroup>
                   <FormGroup>
                       <Label for="status">Status</Label>
                       <Input id="status" value={routeStatus} onChange={(e)=>{
                               setRouteStatus(e.target.value);
                       }}/>
+                      
                   </FormGroup>
                   <FormGroup>
                       <Label for="day">Day</Label>
@@ -127,7 +164,7 @@ const AddRoute = (props) => {
                   </FormGroup>
               </ModalBody>
               <ModalFooter>
-                  <Button color="primary" onClick={addRoute}>ADD</Button>{' '}
+                  <Button color="primary" onClick={validateForm}>ADD</Button>{' '}
                   <Button color="secondary" onClick={toggleModal}>Cancel</Button>
               </ModalFooter>
         </Modal>
