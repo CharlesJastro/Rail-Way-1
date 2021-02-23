@@ -4,11 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-
+import axios from 'axios';
+import { AuthContextProvider } from './Context/AuthContext';
+axios.defaults.withCredentials=true;
 ReactDOM.render(
-  <React.Fragment>
+  <AuthContextProvider>
     <App />
-  </React.Fragment>,
+  </AuthContextProvider>,
   document.getElementById('root')
 );
 

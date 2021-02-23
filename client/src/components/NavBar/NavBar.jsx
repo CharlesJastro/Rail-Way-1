@@ -19,10 +19,10 @@ class NavBar extends Component {
     
     render() {
         return (
-            <Menu widths={3} color='green' inverted>
+            <Menu widths={2} color='green' inverted>
                 <Menu.Item as={Link} to='/'>Routes</Menu.Item>
                 <Menu.Item as={Link} to='/travel'>Travel</Menu.Item>
-                <Menu.Item as={Link} to='/favourites'>Favourites</Menu.Item>
+                {/* <Menu.Item as={Link} to='/favourites'>Favourites</Menu.Item> */}
             </Menu>
         )
     }

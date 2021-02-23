@@ -7,6 +7,7 @@ const {DateTime} = require('luxon');
 const ExceptionRoutes = require('../models/exceptionRoutes');
 const Notifications = require('../models/notifications')
 
+const auth= require('../middleware/auth')
 const TIMEZONE = 'UTC-7';
 //console.log((DateTime.local().setZone(TIMEZONE)).isValid);
 
@@ -31,12 +32,16 @@ router.get('/:id', getRoute,(req,res)=>{
 router.get('/day/:day', getRoutes, (req,res)=>{
     res.json(res.route);
 });
+// GET NEXT DAY's route details
+router.get('/tomorrow/:day', getRoutesTomorrow, (req,res)=>{
+    res.json(res.route);
+});
 //GET BY STATION
 // router.get('/station/:id',getRoute,(req,res)=>{
 //     res.json(res.route)
 // })
 //CREATE post request
-router.post('/', async(req,res)=>{
+router.post('/',auth, async(req,res)=>{
     const route= new Route({
         name:req.body.name,
         day: req.body.day,
@@ -55,7 +60,7 @@ router.post('/', async(req,res)=>{
     }
 })
 //UPDATE request
-router.patch('/:id', getRoute, async(req,res)=>{
+router.patch('/:id',auth, getRoute, async(req,res)=>{
     if(req.body.name !==null){
         res.route.name=req.body.name
     }
@@ -99,7 +104,7 @@ router.patch('/:id', getRoute, async(req,res)=>{
 
 })
 //DELETE request
-router.delete('/:id',getRoute, async(req,res)=>{
+router.delete('/:id',auth,getRoute, async(req,res)=>{
     try{
         await res.route.remove()
         await ExceptionRoutes.deleteMany({routeId:req.params.id})
@@ -152,6 +157,27 @@ async function getRoutes(req, res, next) {
     // Perform all the filtering, sorting, and mapping to pass the relavent information
     routes = routes.filter(route => (
         DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}) > DateTime.local().setZone(TIMEZONE))).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).filter((route, index, self) => index === self.findIndex((t) => (t.name === route.name))).map((route) => ({_id: route._id, name: route.name, day: route.day, departure: DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}), arrival: DateTime.fromObject({zone: TIMEZONE, hour: route.arrivalHour, minute: route.arrivalMinute}), fare: route.fare, status: route.status}));
+        // DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}) > DateTime.local().setZone(TIMEZONE))).sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).filter((route, index, self) => index === self.findIndex((t) => (t.name === route.name))).map((route) => ({_id: route._id, name: route.name, day: route.day, departure: DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}), arrival: DateTime.fromObject({zone: TIMEZONE, hour: route.arrivalHour, minute: route.arrivalMinute}), fare: route.fare, status: route.status}));
+    res.route=routes;
+    next();
+}
+// This function get a list of Tomorrow's routes based on numerical day
+async function getRoutesTomorrow(req, res, next) {
+    let routes;
+    let exceptions;
+    try {
+        // Get routes based on numerical day
+        routes = await Route.find({day: req.params.day});
+        exceptions = await ExceptionRoutes.find({day: req.params.day});
+    } catch(err) {
+        return res.status(500).json({message: err.message});
+    }
+    if (exceptions.length > 0) {
+        //routes = exceptions;
+        routes = routes.map((route) => exceptions.find((exception) => exception.routeId == route._id.toString()) || route);
+    }
+    // Perform all the filtering, sorting, and mapping to pass the relavent information
+    routes = routes.sort((a, b) => a.departureHour-b.departureHour || a.departureMinute-b.departureMinute).map((route) => ({_id: route._id, name: route.name, day: route.day, departure: DateTime.fromObject({zone: TIMEZONE, hour: route.departureHour, minute: route.departureMinute}), arrival: DateTime.fromObject({zone: TIMEZONE, hour: route.arrivalHour, minute: route.arrivalMinute}), fare: route.fare, status: route.status}));
     res.route=routes;
     next();
 }

@@ -1,144 +1,323 @@
 import React, { Component } from 'react';
-//import { makeStyles } from '@material-ui/core/styles';
-import { TravelStations } from './TravelStations';
-import Calendar from 'react-calendar'
 //import GoogleMap from '../../components/GoogleMap';
-import { Button, Icon } from 'semantic-ui-react'
+import { Button, Icon, Modal, Form, Input, Image } from 'semantic-ui-react';
 import { useState } from 'react';
-import Modal from 'react-modal';
 import axios from 'axios';
+import { DateTime } from 'luxon';
+import TimePicker from 'react-time-picker';
+import styleReset from './styleReset.css';
+import { getWeekDay } from '../../utils/getWeekDay';
 
+const Travel = () => {
+    const [uniqueStationList, setUniqueStationList] = React.useState([]);
+    const [day, setDay] = React.useState(new Date().getDay());
+    const [time, setTime] = React.useState('00:00');
+    const [timeHour, setTimeHour] = React.useState();
+    const [timeMinute, setTimeMinute] = React.useState();
+    const [fromStation, setFromStation] = React.useState('Station');
+    const [toStation, setToStation] = React.useState('Station');
+    const [dateOption, setDateOption] = React.useState(0);
+    const [openToModal, setOpenToModal] = React.useState(false);
+    const [openFromModal, setOpenFromModal] = React.useState(false);
+    const [openDateModal, setOpenDateModal] = React.useState(false);
+    const [trip, setTrip] = React.useState(false);
+    const [status, setStatus] = React.useState(0);
+    const savedList = JSON.parse(localStorage.getItem('savedList'));
+    const [favouriteStations, setFavouriteStations] = React.useState(savedList || ['Rigasa']);
+    const [favouriteToggle, setFavouriteToggle] = React.useState(false);
 
-// Modal Dialog function component to open stationList
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)'
-  }
-};
+    React.useEffect(() => {
+        async function fetchData() {
+            let data;
+            try {
+                data = await axios
+                    .get('/stations/list/')
+                setUniqueStationList(data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        fetchData();
+        resetTime();
+    }, []);
 
-// Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
-// Modal.setAppElement('#root')
-
-
-//Calender hide and show function component  
-function MyApp(props) {
-  const [value, onChange] = useState(new Date());
-  console.log(value);
-
-  if (props.status) {
-    return (
-      <div>
-        <Calendar
-          onChange={onChange}
-          value={value}
-        />
-      </div>
-    );
-  }
-  else {
-    return (
-      <div></div>
-    )
-  }
-}
-
-
-class Travel extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      myCalender: new Date(),
-      status: false,
-      modalIsOpen: false,
-      uniqueStationList: []
+    function resetForm() {
+        setStatus(0);
+        setTrip([]);
+        setDay(new Date().getDay());
+        setFromStation('station');
+        setToStation('station');
+        resetTime();
     }
 
-    this.handleClick = this.handleClick.bind(this);
-    this.openModal = this.openModal.bind(this);
+    function resetTime() {
+        let dt = DateTime.fromJSDate(new Date());
+        setTime(`${dt.hour}:${dt.minute}`);
+        setTimeHour(dt.hour);
+        setTimeMinute(dt.minute);
+    }
 
-  };
+    React.useEffect(() => {
+        console.log(favouriteStations);
+        localStorage.setItem('savedList', JSON.stringify(favouriteStations));
+    }, [favouriteStations]);
 
-  handleClick() {
-    this.setState(state => ({
-      status: !state.status
-    }));
-  }
+    function updateFavourites(station) {
+        if (favouriteStations.includes(station)) {
+            setFavouriteStations(favouriteStations.filter(name => name !== station));
+        } else {
+            setFavouriteStations(arr => [...arr, station]);
+        }
+    }
 
-  openModal() {
-    this.setState(state => ({
-      modalIsOpen: !state.modalIsOpen
-    }))
-  }
+    function showList(type) {
+        try {
+            if (type === 'from') {
+                if (!favouriteToggle) {
+                    return (
+                        uniqueStationList.map((station, index) => (
+                            <div key={station + index}>
+                                <Button.Group fluid>
+                                    <Button
+                                        onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
+                                    >
+                                        {station}
+                                    </Button>
 
-  componentDidMount() {
-    axios
-      .get('/stations/list/')
-      .then((response) => {
-        this.setState(state => ({
-          uniqueStationList: response.data
-        }));
-      })
-  }
-  //  afterOpenModal() {
-  //   // references are now sync'd and can be accessed.
-  //   subtitle.style.color = '#f00';
-  // }
+                                    <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                </Button.Group>
+                                <br /><br />
+                            </div>
+                        ))
+                    );
+                } else {
+                    if (favouriteStations.length === 0) {
+                        return (
+                            <p>No item on Favourites Stations</p>
+                        )
+                    } else {
+                        return (
+                            favouriteStations.map((station, index) => (
+                                <div key={station + index}>
+                                    <Button.Group fluid>
+                                        <Button
+                                            onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
+                                        >
+                                            {station}
+                                        </Button>
 
-  //  closeModal() {
-  //     setIsOpen(false);
-  //   }
+                                        <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                    </Button.Group>
+                                    <br /><br />
+                                </div>
+                            ))
+                        );
+                    }
+                }
+            } else {
+                if (!favouriteToggle) {
+                    return (
+                        uniqueStationList.map((station, index) => (
+                            <div key={station + index}>
+                                <Button.Group fluid>
+                                    <Button
+                                        onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
+                                    >
+                                        {station}
+                                    </Button>
 
-  render() {
-    console.log(this.state.myCalender);
-    console.log(this.state.uniqueStationList);
-    return (
-      <div>
-        <h3>Travel View</h3>
-        <Button onClick={this.openModal}>From:  Station</Button> <hr />
-        <Button onClick={this.openModal}>To:  Station</Button> <hr />
-        <Modal
-          isOpen={this.state.modalIsOpen}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <button onClick={this.openModal}>X</button>
-          <form>
-            <h4>Choose Station</h4>
-            {this.state.uniqueStationList.map((station) => (
-              <div>{station}</div>
-            ))}
-          </form>
-        </Modal>
+                                    <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                </Button.Group>
+                                <br /><br />
+                            </div>
+                        ))
+                    );
+                } else {
+                    if (favouriteStations.length === 0) {
+                        return (
+                            <p>No item on Favourites Stations</p>
+                        )
+                    } else {
+                        return (
+                            favouriteStations.map((station, index) => (
+                                <div key={station + index}>
+                                    <Button.Group fluid>
+                                        <Button
+                                            onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
+                                        >
+                                            {station}
+                                        </Button>
 
-        <Button onClick={this.handleClick}>Depart At:  Now</Button> <hr /> <br /><br /><br />
+                                        <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                    </Button.Group>
+                                    <br /><br />
+                                </div>
+                            ))
+                        );
+                    }
+                }
 
-        <MyApp status={this.state.status} />
+            }
 
-        <Button animated>
-          <Button.Content visible>Find</Button.Content>
-          <Button.Content hidden>
-            <Icon name='arrow down' />
-          </Button.Content>
-        </Button>
-        <br /><br /><br /><br />
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
+    async function getTrip() {
+        let data;
+        try {
+            data = await axios
+                .get(`/stations/trip/from/${fromStation}/to/${toStation}/day/${Number(day)}/hour/${timeHour}/minute/${timeMinute}`)
+        } catch (error) {
+            console.log(error);
+        }
+        let path = data.data;
+        console.log(path);
+        setTrip(path);
+        setStatus(1);
+    }
 
-        {/* <Button color="primary">To:    Station</Button> <hr/>
-         <Button color="secondary">Depart At:    Now</Button> <hr/>
-         <Button disabled>Disabled</Button>
-         <Button href="#text-buttons" color="primary">Link</Button> */}
-      </div>
-    )
-  }
+    if (!status) {
+        return (
+            <div>
+                <h2>Travel</h2>
+                <Modal
+                    open={openFromModal}
+                    trigger={<Button fluid>From: {fromStation}</Button>}
+                    onClose={() => [setOpenFromModal(false),setFavouriteToggle(false)]}
+                    onOpen={() => setOpenFromModal(true)}
+                >
+                    <Modal.Header>Select Station</Modal.Header> <br />
+                    <Button onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
+                    <Modal.Content>
+                        {showList('from')}
+                    </Modal.Content>
+                </Modal>
+                <hr />
+                <Modal
+                    open={openToModal}
+                    trigger={<Button fluid>To: {toStation}</Button>}
+                    onClose={() => [setOpenToModal(false),setFavouriteToggle(false)]}
+                    onOpen={() => setOpenToModal(true)}
+                >
+                    <Modal.Header>Select Station</Modal.Header> <br/>
+                    <Button onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
+                    <Modal.Content>
+                        {showList('to')}
+                    </Modal.Content>
+                </Modal>
+                <hr />
+                <Modal
+                    closeIcon
+                    open={openDateModal}
+                    trigger={<Button fluid>Depart On: {getWeekDay(Number(day))} at {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</Button>}
+                    onClose={() => setOpenDateModal(false)}
+                    onOpen={() => setOpenDateModal(true)}
+                >
+                    <Modal.Header>Select Day and Time</Modal.Header>
+                    <Modal.Content>
+                        <Form>
+                            <Form.Field>
+                                <label htmlFor="day">Day</label>
+                                <select id="day" value={day} onChange={(e) => {
+                                    setDay(e.target.value);
+                                }}>
+                                    <option value={0}>Sunday</option>
+                                    <option value={1}>Monday</option>
+                                    <option value={2}>Tuesday</option>
+                                    <option value={3}>Wednesday</option>
+                                    <option value={4}>Thursday</option>
+                                    <option value={5}>Friday</option>
+                                    <option value={6}>Saturday</option>
+                                </select>
+                            </Form.Field>
+                            <Form.Field>
+                                <label htmlFor="time">Time</label>
+                                <TimePicker
+                                    style={styleReset}
+                                    id="time"
+                                    value={time}
+                                    onChange={(e) => {
+                                        console.log(e);
+                                        let [hours, minutes] = [0, 0];
+                                        try {
+                                            [hours, minutes] = e.split(':');
+
+                                        } catch (err) {
+                                            [hours, minutes] = [0, 0];
+                                        }
+                                        setTime(e);
+                                        setTimeHour(hours);
+                                        setTimeMinute(minutes);
+                                    }}
+                                />
+                                <br />
+                                <br />
+                                <Button primary onClick={() => setOpenDateModal(false)}>Confirm</Button>
+                                <Button secondary onClick={() => [setDay(new Date().getDay()), resetTime()]}>Reset</Button>
+                            </Form.Field>
+                        </Form>
+                    </Modal.Content>
+                </Modal>
+                <hr />
+                <Button fluid animated='vertical' onClick={(getTrip)}>
+                    <Button.Content visible>Find</Button.Content>
+                    <Button.Content hidden>
+                        <Icon name='arrow down' />
+                    </Button.Content>
+                </Button>
+            </div>
+        );
+    } else {
+        if (trip.length > 0) {
+            return (
+                <div>
+                    <h2>Travel</h2>
+                    <h4>From: {fromStation}</h4>
+                    <h4>To: {toStation}</h4>
+                    <p>Departing On: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
+                    <table style={{ width: "100%" }}>
+                        <thead>
+                            <tr>
+                                <th>Departing</th>
+                                <th>Arriving</th>
+                                <th>Duration</th>
+                                <th>Fare*</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {trip.map((station, index) => (
+                                <tr key={station._id}>
+                                    {console.log(DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject())}
+                                    <td>{station.startingStation} {DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+                                    <td>{station.endingStation} {DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</td>
+                                    <td>{DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject().hours}hr {DateTime.fromObject({ hour: station.arrivalHour, minute: station.arrivalMinute }).diff(DateTime.fromObject({ hour: station.departureHour, minute: station.departureMinute }), ['hours', 'minutes']).toObject().minutes}min </td>
+                                    <td>{station.fare}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <br />
+                    <p>* Fares are typically for an entire route. Please consult your ticket vendor for final fare</p>
+                    <Button onClick={resetForm}>Plan Another Trip</Button>
+                </div>
+            );
+        } else {
+            return (
+                <div>
+                    <h2>Travel</h2>
+                    <h4>From: {fromStation}</h4>
+                    <h4>To: {toStation}</h4>
+                    <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
+                    <p>I'm sorry, but this trip is not possible at this time and day. Please pick another time, day or select different stations</p>
+                    <br />
+                    <Button onClick={resetForm}>Plan Another Trip</Button>
+                </div>
+            );
+        }
+    }
 
 };
 
 export default Travel;
-

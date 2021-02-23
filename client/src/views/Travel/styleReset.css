@@ -1,0 +1,12 @@
+input[type=number] {
+    padding: 0 !important;
+    border: none !important;
+}
+
+.react-time-picker__inputGroup__amPm {
+    display: inline !important;
+    width: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border: none !important;
+}

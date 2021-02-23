@@ -2,6 +2,7 @@
 let router = require('express').Router();
 const Exceptions= require('../models/exceptionRoutes');
 const Notifications = require('../models/notifications');
+const auth= require('../middleware/auth')
 
 // Get all exceptions
 router.get('/', async(req, res) => {
@@ -17,7 +18,7 @@ router.get('/:id', getException,(req,res)=>{
     res.json(res.exception);
 });
 // Create post request
-router.post('/', async(req, res) => {
+router.post('/', auth, async(req, res) => {
     const exception = new Exceptions({
         name: req.body.name,
         day: req.body.day,
@@ -44,7 +45,7 @@ router.post('/', async(req, res) => {
     }
 });
 // Update exception
-router.patch('/:id', getException, async(req,res)=>{
+router.patch('/:id', auth, getException, async(req,res)=>{
     if(req.body.name !=null){
         res.exception.name=req.body.name;
     }
@@ -80,7 +81,7 @@ router.patch('/:id', getException, async(req,res)=>{
     }
 });
 // Delete All Exceptions
-router.delete('/all', async(req, res) => {
+router.delete('/all', auth, async(req, res) => {
     try {
         await Exceptions.deleteMany({});
         res.json({message: "Deleted All Exceptions"});

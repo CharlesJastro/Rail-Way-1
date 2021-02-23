@@ -1,0 +1,1 @@
+export {default as getWeekDay} from './getWeekDay';

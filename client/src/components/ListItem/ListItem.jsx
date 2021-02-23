@@ -11,7 +11,7 @@ const ListItem = ({id, className, data}) => {
                     <ListSubItem key={index} data={x} />
                 ))}
             </tr>}
-            content="Click for more information"
+            content="Click for daily schedule"
         />
   );
 }

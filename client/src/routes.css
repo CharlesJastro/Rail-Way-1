@@ -1,11 +1,11 @@
 .notice-info {
-    background-color: skyblue;
+    background-color: rgb(129, 194, 32);
     color: white;
     border: 2px solid black;
 }
 
 .notice-alert {
-    background-color: red;
+    background-color: rgb(243, 17, 17);
     color: white;
     border: 2px solid black;
 }
