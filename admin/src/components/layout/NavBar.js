@@ -26,7 +26,6 @@ import trainImg from '../layout/classic_locomotive_train_312396.png'
     const {loggedIn}=useContext(AuthContext);
 
     return(
-        <div>
             <Navbar color="dark" dark expand="sm" sticky="top">
                 <NavbarBrand className="mr-auto text-white"  href="/">
                     <img alt=""
@@ -67,7 +66,6 @@ import trainImg from '../layout/classic_locomotive_train_312396.png'
                     </Nav>
                 </Collapse>
          </Navbar>
-    </div>
 
 
         

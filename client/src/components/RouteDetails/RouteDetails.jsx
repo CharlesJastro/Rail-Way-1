@@ -61,7 +61,7 @@ const RouteDetails = (props) => {
     function getFunction(route) {
         if (route.length === 0){
             return (
-                <p>No data</p>
+                <p>No Trips Today</p>
             );
         } else {
             let stationList = route.map((item, index) => item.startingStation);
