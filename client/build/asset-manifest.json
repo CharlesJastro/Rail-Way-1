@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.266751d0.chunk.css",
+    "main.js": "/static/js/main.1da7f77d.chunk.js",
+    "main.js.map": "/static/js/main.1da7f77d.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.4630dc88.js",
+    "runtime-main.js.map": "/static/js/runtime-main.4630dc88.js.map",
+    "static/css/2.b4f69528.chunk.css": "/static/css/2.b4f69528.chunk.css",
+    "static/js/2.d66a7e3b.chunk.js": "/static/js/2.d66a7e3b.chunk.js",
+    "static/js/2.d66a7e3b.chunk.js.map": "/static/js/2.d66a7e3b.chunk.js.map",
+    "static/js/3.f0bb5048.chunk.js": "/static/js/3.f0bb5048.chunk.js",
+    "static/js/3.f0bb5048.chunk.js.map": "/static/js/3.f0bb5048.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.b4f69528.chunk.css.map": "/static/css/2.b4f69528.chunk.css.map",
+    "static/css/main.266751d0.chunk.css.map": "/static/css/main.266751d0.chunk.css.map",
+    "static/js/2.d66a7e3b.chunk.js.LICENSE.txt": "/static/js/2.d66a7e3b.chunk.js.LICENSE.txt",
+    "static/media/animation_500_kknnq4t6.c8abf826.gif": "/static/media/animation_500_kknnq4t6.c8abf826.gif",
+    "static/media/semantic.min.css": "/static/media/outline-icons.ddae9b1b.woff",
+    "static/media/classic_locomotive_train_312396.f217537d.jpg": "/static/media/classic_locomotive_train_312396.f217537d.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.4630dc88.js",
+    "static/css/2.b4f69528.chunk.css",
+    "static/js/2.d66a7e3b.chunk.js",
+    "static/css/main.266751d0.chunk.css",
+    "static/js/main.1da7f77d.chunk.js"
+  ]
+}
