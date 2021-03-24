@@ -77,7 +77,7 @@ const Travel = () => {
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
                                 <Button.Group fluid>
-                                    <Button
+                                    <Button 
                                         onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                     >
                                         {station}
@@ -99,7 +99,7 @@ const Travel = () => {
                             favouriteStations.map((station, index) => (
                                 <div key={station + index}>
                                     <Button.Group fluid>
-                                        <Button
+                                        <Button 
                                             onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                         >
                                             {station}
@@ -119,7 +119,7 @@ const Travel = () => {
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
                                 <Button.Group fluid>
-                                    <Button
+                                    <Button 
                                         onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
                                     >
                                         {station}
@@ -141,7 +141,7 @@ const Travel = () => {
                             favouriteStations.map((station, index) => (
                                 <div key={station + index}>
                                     <Button.Group fluid>
-                                        <Button
+                                        <Button 
                                             onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
                                         >
                                             {station}
@@ -180,27 +180,27 @@ const Travel = () => {
         return (
             <div>
                 <h2>Travel</h2>
-                <Modal
+                <Modal style={{'width':'80%', 'height':'90%'}} 
                     open={openFromModal}
                     trigger={<Button fluid>From: {fromStation}</Button>}
                     onClose={() => [setOpenFromModal(false),setFavouriteToggle(false)]}
                     onOpen={() => setOpenFromModal(true)}
                 >
                     <Modal.Header>Select Station</Modal.Header> <br />
-                    <Button onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
+                    <Button style={{'margin-bottom':'10px', 'margin-left':'15px', 'background-color':'springgreen'}} onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
                     <Modal.Content>
                         {showList('from')}
                     </Modal.Content>
                 </Modal>
                 <hr />
-                <Modal
+                <Modal style={{'width':'80%', 'height':'90%'}}
                     open={openToModal}
                     trigger={<Button fluid>To: {toStation}</Button>}
                     onClose={() => [setOpenToModal(false),setFavouriteToggle(false)]}
                     onOpen={() => setOpenToModal(true)}
                 >
                     <Modal.Header>Select Station</Modal.Header> <br/>
-                    <Button onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
+                    <Button style={{'margin-bottom':'10px', 'margin-left':'15px', 'background-color':'springgreen'}} onClick={() => setFavouriteToggle(!favouriteToggle)}>{!favouriteToggle ? "Select from Favourites" : "Select from All"}</Button>
                     <Modal.Content>
                         {showList('to')}
                     </Modal.Content>
@@ -258,7 +258,7 @@ const Travel = () => {
                     </Modal.Content>
                 </Modal>
                 <hr />
-                <Button fluid animated='vertical' onClick={(getTrip)}>
+                <Button style={{'background-color':'springgreen'}} fluid animated='vertical' onClick={(getTrip)}>
                     <Button.Content visible>Find</Button.Content>
                     <Button.Content hidden>
                         <Icon name='arrow down' />
@@ -296,7 +296,7 @@ const Travel = () => {
                     </table>
                     <br />
                     <p>* Fares are typically for an entire route. Please consult your ticket vendor for final fare</p>
-                    <Button onClick={resetForm}>Plan Another Trip</Button>
+                    <Button style={{'background-color':'springgreen'}} onClick={resetForm}>Plan Another Trip</Button>
                 </div>
             );
         } else {
@@ -308,7 +308,7 @@ const Travel = () => {
                     <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
                     <p>I'm sorry, but this trip is not possible at this time and day. Please pick another time, day or select different stations</p>
                     <br />
-                    <Button onClick={resetForm}>Plan Another Trip</Button>
+                    <Button style={{'background-color':'springgreen'}} onClick={resetForm}>Plan Another Trip</Button>
                 </div>
             );
         }
