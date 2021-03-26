@@ -81,14 +81,14 @@ class RoutesList extends Component {
             console.log('Error');
             return (
                 <div className="ui container routesList">
-                    <h2>Routes List Currently Unavailable</h2>
+                    <h2>Train Schedule Currently Unavailable</h2>
                     <p>Please try again later. We apologize for the inconvenience.</p>
                 </div>
             );
         } else if (this.state.connection === 1) {
             return (
                 <div className="ui container routesList">
-                    <h2>Routes</h2>
+                    <h2>Schedules</h2>
                     <h4>Schedule Timezone: {DateTime.local().zoneName}</h4>
                     <h4>Next Available Trains:</h4>
                     {console.log(DateTime.local().weekday)}
@@ -113,7 +113,7 @@ class RoutesList extends Component {
         } else if (this.state.connection === 2) {
             return (
                 <div className="ui container routesList">
-                    <h2>Routes</h2>
+                    <h2>Schedules</h2>
                     <p>There are no more trains operating today. Displaying tomorrow's schedule. </p>
                     <h4>Schedule Timezone: {DateTime.local().zoneName}</h4>
                     <table style={{width:"100%"}}>
@@ -138,7 +138,7 @@ class RoutesList extends Component {
         else {
             return (
                 <div className="ui container routesList">
-                    <h2>Routes</h2>
+                    <h2>Schedules</h2>
                     <img src={loadingGif} alt="loading train" />
                 </div>
             );

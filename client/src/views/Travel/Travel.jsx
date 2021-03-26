@@ -179,7 +179,7 @@ const Travel = () => {
     if (!status) {
         return (
             <div>
-                <h2>Travel</h2>
+                <h2>Plan Trip</h2>
                 <Modal style={{'width':'80%', 'height':'90%'}} 
                     open={openFromModal}
                     trigger={<Button fluid>From: {fromStation}</Button>}
@@ -270,7 +270,7 @@ const Travel = () => {
         if (trip.length > 0) {
             return (
                 <div>
-                    <h2>Travel</h2>
+                    <h2>Plan Trip</h2>
                     <h4>From: {fromStation}</h4>
                     <h4>To: {toStation}</h4>
                     <p>Departing On: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
@@ -302,7 +302,7 @@ const Travel = () => {
         } else {
             return (
                 <div>
-                    <h2>Travel</h2>
+                    <h2>Plan Trip</h2>
                     <h4>From: {fromStation}</h4>
                     <h4>To: {toStation}</h4>
                     <p>Departing At: {getWeekDay(Number(day))}, {DateTime.fromObject({ hours: timeHour, minutes: timeMinute }).toLocaleString(DateTime.TIME_SIMPLE)}</p>
