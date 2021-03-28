@@ -76,15 +76,15 @@ const Travel = () => {
                     return (
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
-                                 {/* <Button.Group fluid> */}
-                                 <Button 
+                                 <Button.Group fluid>
+                                    <Button 
                                         onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                     >
                                         {station}
                                     </Button>
 
                                     <Image  src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
-                                {/* </Button.Group> */}
+                                </Button.Group>
                                 <br /><br />
                             </div>
                         ))
