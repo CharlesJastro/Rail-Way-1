@@ -77,11 +77,11 @@ const Travel = () => {
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
                                 <Button.Group fluid>
-                                    <Button 
+                                    <button 
                                         onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                     >
                                         {station}
-                                    </Button>
+                                    </button>
 
                                     <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
                                 </Button.Group>
