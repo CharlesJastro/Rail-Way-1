@@ -6,6 +6,7 @@ import axios from 'axios';
 import { DateTime } from 'luxon';
 import TimePicker from 'react-time-picker';
 import styleReset from './styleReset.css';
+import './star.css';
 import { getWeekDay } from '../../utils/getWeekDay';
 
 const Travel = () => {
@@ -76,15 +77,15 @@ const Travel = () => {
                     return (
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
-                                 <Button.Group>
+                                 {/* <Button.Group fluid> */}
                                     <Button 
                                         onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                     >
                                         {station}
                                     </Button>
 
-                                    <Image  src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
-                                </Button.Group>
+                                    <Image className="starSize"  src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                {/* </Button.Group> */}
                                 <br /><br />
                             </div>
                         ))
@@ -98,15 +99,15 @@ const Travel = () => {
                         return (
                             favouriteStations.map((station, index) => (
                                 <div key={station + index}>
-                                    <Button.Group fluid>
+                                    {/* <Button.Group fluid> */}
                                         <Button 
                                             onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                         >
                                             {station}
                                         </Button>
 
-                                        <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
-                                    </Button.Group>
+                                        <Image  src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                    {/* </Button.Group> */}
                                     <br /><br />
                                 </div>
                             ))
@@ -118,15 +119,15 @@ const Travel = () => {
                     return (
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
-                                <Button.Group fluid>
+                                {/* <Button.Group fluid> */}
                                     <Button 
                                         onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
                                     >
                                         {station}
                                     </Button>
 
-                                    <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
-                                </Button.Group>
+                                    <Image  src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                {/* </Button.Group> */}
                                 <br /><br />
                             </div>
                         ))
@@ -140,15 +141,15 @@ const Travel = () => {
                         return (
                             favouriteStations.map((station, index) => (
                                 <div key={station + index}>
-                                    <Button.Group fluid>
+                                    {/* <Button.Group fluid> */}
                                         <Button 
                                             onClick={() => [setToStation(station), setOpenToModal(false), setFavouriteToggle(false)]}
                                         >
                                             {station}
                                         </Button>
 
-                                        <Image floated='right' src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
-                                    </Button.Group>
+                                        <Image  src={favouriteStations.includes(station) ? 'star1.png' : 'star.png'} size='mini' onClick={() => updateFavourites(station)} />
+                                    {/* </Button.Group> */}
                                     <br /><br />
                                 </div>
                             ))
