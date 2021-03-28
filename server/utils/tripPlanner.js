@@ -16,16 +16,16 @@ function recursiveFunc(fromStation, list, hour, minute, toStation){
         return station.startingStation === fromStation;
     });
     stationAList = stationAList.filter((station) => {
-        return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) > DateTime.fromObject({hour: hour, minute: minute})); 
+        return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) >= DateTime.fromObject({hour: hour, minute: minute})); 
     });
     let updatedStationList = list.filter((station) => {
         return !stationAList.includes(station); 
     });
     updatedStationList = updatedStationList.filter((station) => {
-        return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) > DateTime.fromObject({hour: hour, minute: minute}));
+        return (DateTime.fromObject({hour: station.departureHour, minute: station.departureMinute}) >= DateTime.fromObject({hour: hour, minute: minute}));
     });
     console.log(updatedStationList);
-    for (let i = 0; i < stationAList.length-1; i++) {
+    for (let i = 0; i <= stationAList.length-1; i++) {
         path.push(stationAList[i]);
         if (stationAList[i].endingStation === toStation) {
             console.log('Done');

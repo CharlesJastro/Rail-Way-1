@@ -76,7 +76,7 @@ const Travel = () => {
                     return (
                         uniqueStationList.map((station, index) => (
                             <div key={station + index}>
-                                 <Button.Group fluid>
+                                 <Button.Group>
                                     <Button 
                                         onClick={() => [setFromStation(station), setOpenFromModal(false), setFavouriteToggle(false)]}
                                     >
