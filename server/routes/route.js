@@ -8,7 +8,7 @@ const ExceptionRoutes = require('../models/exceptionRoutes');
 const Notifications = require('../models/notifications')
 
 const auth= require('../middleware/auth')
-const TIMEZONE = 'UTC+1';
+const TIMEZONE = 'UTC-6';
 
 //GET-ALL
 

@@ -6,7 +6,6 @@ import axios from 'axios';
 import { DateTime } from 'luxon';
 import TimePicker from 'react-time-picker';
 import styleReset from './styleReset.css';
-import './star.css';
 import { getWeekDay } from '../../utils/getWeekDay';
 
 const Travel = () => {
