@@ -24,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/marcinmmalec/Rail-Way/issues"
   },
-  "homepage": "https://github.com/marcinmmalec/Rail-Way#readme"
+  "homepage": "https://github.com/marcinmmalec/Rail-Way#readme",
+  "dependencies": {
+    "react-ga": "^3.3.0"
+  }
 }
